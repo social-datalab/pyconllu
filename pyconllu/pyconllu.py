@@ -5,6 +5,7 @@ from copy import deepcopy
 from collections import OrderedDict
 from .exceptions import ParseException
 from .models import headdep, sentence
+from .Sentence import Sentence
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',
@@ -668,8 +669,6 @@ class CoNLLU:
         Parser adapted from conllu package
         https://github.com/EmilStenstrom/conllu
         """
-        if value == '_':
-            return None
         try:
             return int(value)
         except ValueError:
