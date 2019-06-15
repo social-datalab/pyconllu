@@ -1,3 +1,3 @@
-from .pyconllu import CoNLLU
+from .CoNLLU import CoNLLU
 
 __all__ = ['CoNLLU']
