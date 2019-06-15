@@ -4,8 +4,8 @@ import re
 from copy import deepcopy
 from collections import OrderedDict
 from .exceptions import ParseException
-from .models import headdep, sentence
 from .Sentence import Sentence
+from .models import headdep
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',
@@ -21,7 +21,7 @@ CONTRACT_ID_PATTERN = r"^[0-9]+\-[0-9]+$"
 EMPTY_NODE_ID_PATTERN = r"^[0-9]+\.[0-9]+$"
 
 
-class CoNLLU:
+class CoNLLU(object):
     """
     It processes a file in CoNNL-U format.
 
@@ -35,8 +35,7 @@ class CoNLLU:
         tokens).
 
         :param raw_sentence: string
-        :return: sentence (namedtuple) containing contractions (if any),
-        comments (if any) and tokens (list of OrderedDicts)
+        :return: Sentence
 
         Input:
             "1	O	o	DET (...)
@@ -49,7 +48,7 @@ class CoNLLU:
 
         Output:
 
-        sentence
+        Sentence
         (
             comments=None,
             tokens=[
@@ -64,12 +63,6 @@ class CoNLLU:
                     ...
                 OrderedDict([
                     ("id", "4"), ("form", "os"), ("lemma", "o"),
-                    ...
-                OrderedDict([
-                    ("id", "5"), ("form", "principais"),
-                    ...
-                OrderedDict([
-                    ("id", "6"), ("form", "hotéis"), ("lemma", "hotél"),
                     ...
                 ...
             ],
@@ -87,7 +80,6 @@ class CoNLLU:
         )
         """
         comments = None
-        empty_nodes = None
 
         if re.search(r"^\s*#", raw_sentence):
             comments = "\n".join(
@@ -103,7 +95,7 @@ class CoNLLU:
             for m in re.finditer(
                 r"^(([0-9]+)\.[0-9]+\t.*)$", raw_sentence, re.MULTILINE)]
 
-        return sentence(
+        return Sentence(
             comments=comments,
             tokens=self._parse_sentence(raw_sentence),
             contractions=contractions,
@@ -122,27 +114,7 @@ class CoNLLU:
             ifile = "corpus.conllu"
 
         Output:
-            [
-                OrderedDict([
-                    ('id', 1),
-                    ('form', 'Las'),
-                    ('lemma', 'el'),
-                    ...
-                ]),
-                OrderedDict([
-                    ('id', 2),
-                    ('form', 'unidades'),
-                    ('lemma', 'unidad'),
-                    ...
-                ]),
-                OrderedDict([
-                    ('id', 3),
-                    ('form', 'sísmicas'),
-                    ('lemma', 'sísmico'),
-                    ...
-                ]),
-                ...
-            ]
+            ToDo
         """
         for raw_sentence in self._read_sentences_from_file(ifile):
             yield self.parse_sentence(raw_sentence)
@@ -181,7 +153,7 @@ class CoNLLU:
         and information.
 
         Input:
-            sentence =
+            Sentence =
             [
                 OrderedDict([
                     ('id', 1),
@@ -218,7 +190,7 @@ class CoNLLU:
         It returns a list of wordforms in a sentence.
 
         Input:
-            sentence (list of OrderedDict)
+            instance of Sentence
 
         Output:
             [
@@ -249,7 +221,7 @@ class CoNLLU:
         (head = 0).
 
         Input:
-            sentence (list of OrderedDict)
+            instance of Sentence
 
         Output:
             OrderedDict([
@@ -513,24 +485,24 @@ class CoNLLU:
             3   sísmicas    sísmico ADJ AQ0FP0  (...)
             (...)"
         """
-        sentence = ""
+        raw_sentence = ""
         try:
             with open(ifile) as f:
                 for line in f:
                     line = line.strip(" ")
                     if line == "\n":
-                        if sentence is "":
+                        if raw_sentence is "":
                             continue
-                        yield sentence
-                        sentence = ""
+                        yield raw_sentence
+                        raw_sentence = ""
                         continue
 
                     if line:
-                        sentence += line
+                        raw_sentence += line
 
             # yield remaining contents if file does not end in '\n\n'
-            if sentence:
-                yield sentence
+            if raw_sentence:
+                yield raw_sentence
         except IOError:
             print("Unable to read file: " + ifile)
             sys.exit()
@@ -653,11 +625,6 @@ class CoNLLU:
         return data
 
     def _parse_id_value(selfself, value):
-        """
-
-        :param value:
-        :return:
-        """
         if re.match(r"^[0-9]+([\-\.][0-9]+)?$", value):
             return value
 

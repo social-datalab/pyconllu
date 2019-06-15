@@ -5,7 +5,7 @@ from types import GeneratorType
 from collections import OrderedDict
 from pyconllu import CoNLLU
 from pyconllu.exceptions import ParseException
-from pyconllu.models import sentence
+from pyconllu.Sentence import Sentence
 
 
 @pytest.fixture(scope="session")
@@ -71,13 +71,13 @@ def test_parse_file_returns_iterator(sentences_parsed_from_file):
 
 def test_parse_file_output_is_list_of_ordereddicts(sentences_parsed_from_file):
     sent = next(sentences_parsed_from_file)
-    assert (isinstance(sent, sentence) and
+    assert (isinstance(sent, Sentence) and
             all(isinstance(s, OrderedDict) for s in sent.tokens))
 
 
 def test_parse_empty_sentence(conllu, empty_sentence):
     assert (conllu.parse_sentence(empty_sentence) ==
-            sentence(
+            Sentence(
                 comments=None, tokens=[], contractions=[], empty_nodes=[]))
 
 

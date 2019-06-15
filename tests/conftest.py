@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 from collections import OrderedDict
-from pyconllu.models import headdep, sentence
+from pyconllu.models import headdep
+from pyconllu.Sentence import Sentence
 
 
 @pytest.fixture
@@ -183,7 +184,7 @@ def conllu_string_with_empty_node():
 
 @pytest.fixture
 def parsed_sentence_from_string():
-    return sentence(
+    return Sentence(
         comments=None,
         tokens=[
             OrderedDict([
@@ -278,7 +279,7 @@ def parsed_sentence_from_string():
 
 @pytest.fixture
 def parsed_sentence_with_empty_node():
-    return sentence(
+    return Sentence(
         comments="# source_sent_id = . . email-enronsent28_01-0019\n# text = "
                  "By late 1974 investors were dizzy, they were desperate, "
                  "they were wrung-out, they had left Wall Street, many for "
@@ -473,7 +474,7 @@ def parsed_sentence_with_empty_node():
 @pytest.fixture
 def parsed_sentence_from_file():
     return [
-        sentence
+        Sentence
         (
             comments="# sent_id = 1\n# text = El objetivo de este trabajo ha "
                      "sido conocer si los valores de homocisteína influyen "
@@ -689,7 +690,7 @@ def parsed_sentence_from_file():
             ],
             empty_nodes=[]
         ),
-        sentence
+        Sentence
         (
             comments="# sent_id = 2\n# text = La angiografía coronaria se "
                      "realizó a 164 pacientes.",
@@ -758,7 +759,7 @@ def parsed_sentence_from_file():
             contractions=[],
             empty_nodes=[]
         ),
-        sentence
+        Sentence
         (
             comments="# sent_id = 3\n# text = Ningún paciente recibió "
                      "tratamiento vitamínico durante el estudio.",
