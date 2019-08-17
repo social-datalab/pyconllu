@@ -3,7 +3,6 @@ import sys
 import re
 from copy import deepcopy
 from collections import OrderedDict
-from .exceptions import ParseException
 from .Sentence import Sentence
 from .Token import Token
 from .models import headdep
@@ -205,7 +204,7 @@ class CoNLLU(object):
         str get_sentence_text(str)
 
         It returns the sentence as included in the comment 'text = ...' or
-        raises ParseException if the comment does not exist.
+        raises Exception if the comment does not exist.
         """
         try:
             return re.search(TEXT_PATTERN, sentence.comments).group(1)
@@ -565,7 +564,7 @@ class CoNLLU(object):
         fields = DEFAULT_FIELDS
         line = re.split(TOKEN_SEP_PATTERN, line)
         if len(line) != 10:
-            raise ParseException(
+            raise Exception(
                 "Invalid format, line must contain ten fields separated "
                 "by tabs."
                 )
@@ -603,7 +602,7 @@ class CoNLLU(object):
         if re.match(r"^[0-9]+([\-\.][0-9]+)?$", value):
             return value
 
-        raise ParseException(
+        raise Exception(
             "Incorrect ID field in CoNLL-U: {}".format(value))
 
     def _parse_int_value(self, value):

@@ -4,7 +4,6 @@ import pytest
 from types import GeneratorType
 from collections import OrderedDict
 from pyconllu import CoNLLU
-from pyconllu.exceptions import ParseException
 from pyconllu.Sentence import Sentence
 from pyconllu.Token import Token
 
@@ -83,9 +82,9 @@ def test_parse_empty_sentence(conllu, empty_sentence):
 
 
 def test_parse_sentence_with_errors(conllu, sentence_with_errors):
-    with pytest.raises(ParseException) as pexc:
+    with pytest.raises(Exception) as exc:
         conllu.parse_sentence(sentence_with_errors)
-    assert (str(pexc.value) ==
+    assert (str(exc.value) ==
             "Invalid format, line must contain ten fields separated "
             "by tabs.")
 
