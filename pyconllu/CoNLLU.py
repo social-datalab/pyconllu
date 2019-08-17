@@ -5,6 +5,7 @@ from copy import deepcopy
 from collections import OrderedDict
 from .exceptions import ParseException
 from .Sentence import Sentence
+from .Token import Token
 from .models import headdep
 
 DEFAULT_FIELDS = (
@@ -197,7 +198,7 @@ class CoNLLU(object):
                 'Las', 'unidades', 'sísmicas', 'restantes', 'corresponden' ...
             ]
         """
-        return [token['form'] for token in sentence.tokens]
+        return [token.form for token in sentence.tokens]
 
     def get_sentence_text(self, sentence):
         """
@@ -244,7 +245,7 @@ class CoNLLU(object):
             ])
         """
         for token in sentence.tokens:
-            if token['head'] == 0:
+            if token.head == 0:
                 return token
 
     def get_heads(self, sentence):
@@ -304,13 +305,13 @@ class CoNLLU(object):
         """
         return [
             {
-                "id": sentence.tokens[t - 1]["id"],
-                "lemma": sentence.tokens[t - 1]["lemma"],
-                "tag": sentence.tokens[t - 1]["upostag"],
+                "id": sentence.tokens[t - 1].id,
+                "lemma": sentence.tokens[t - 1].lemma,
+                "tag": sentence.tokens[t - 1].upostag,
                 "deps": self.get_deps_from_head(int(
-                    sentence.tokens[t - 1]["id"]), sentence)
+                    sentence.tokens[t - 1].id), sentence)
             } for t in set([
-                token["head"] for token in sentence.tokens
+                token.head for token in sentence.tokens
             ]).difference([0])
         ]
 
@@ -355,12 +356,12 @@ class CoNLLU(object):
         """
         return [
             {
-                "lemma": token["lemma"],
-                "form": token["form"],
-                "tag": token["upostag"],
-                "pos": token["xpostag"],
-                "deprel": token["deprel"]
-            } for token in sentence.tokens if token["head"] == int(head)
+                "lemma": token.lemma,
+                "form": token.form,
+                "tag": token.upostag,
+                "pos": token.xpostag,
+                "deprel": token.deprel
+            } for token in sentence.tokens if token.head == int(head)
         ]
 
     def get_headdep_pairs(self, sentence):
@@ -397,15 +398,15 @@ class CoNLLU(object):
         lemmas = self.get_lemmas(sentence)
         return [
             headdep(
-                rel=token['deprel'],
-                head=lemmas[token['head'] - 1],
-                dep=token['lemma'],
+                rel=token.deprel,
+                head=lemmas[token.head - 1],
+                dep=token.lemma,
                 pos=(
-                    token['head'] - 1,
+                    token.head - 1,
                     idx
                 )
             )
-            for idx, token in enumerate(sentence.tokens) if token['head'] > 0
+            for idx, token in enumerate(sentence.tokens) if token.head > 0
         ]
 
     def get_headdep_pairs_in_deprel(self, deprel, sentence):
@@ -440,32 +441,8 @@ class CoNLLU(object):
     def _convert_tokens_to_conllu(self, tokens):
         raw_sentence = ""
         for token in tokens:
-            raw_sentence += "\t".join(
-                map(str, self._expand_token(token))) + "\n"
+            raw_sentence += str(token) + "\n"
         return raw_sentence
-
-    def _expand_features(self, features):
-        """
-        It returns
-        :param features: OrderedDict
-        :return: str
-        """
-        try:
-            iter(features)
-        except:
-            return None
-        return "|".join(["=".join([key, features[key]]) for key in features])
-
-    def _expand_token(self, token):
-        expanded_token = []
-
-        token['feats'] = self._expand_features(token['feats'])
-        for key in token:
-            if token[key] is None:
-                expanded_token.append("_")
-            else:
-                expanded_token.append(token[key])
-        return expanded_token
 
     def _read_sentences_from_file(self, ifile):
         """
@@ -547,10 +524,10 @@ class CoNLLU(object):
         Output:
             "UPV"
         """
-        return token['form'] if (
-            self._is_propername(token['xpostag']) or
-            self._is_propername(token['upostag'])
-        ) else token['lemma']
+        return token.form if (
+            self._is_propername(token.xpostag) or
+            self._is_propername(token.upostag)
+        ) else token.lemma
 
     def _is_contraction(self, line):
         if re.search(
@@ -593,34 +570,32 @@ class CoNLLU(object):
                 "by tabs."
                 )
 
-        data = OrderedDict()
+        data = Token()
 
         for i, field in enumerate(fields):
             if i >= len(line):
                 break
 
             if field == "id":
-                value = self._parse_id_value(line[i])
-
+                data.id = self._parse_id_value(line[i])
+            elif field == "form":
+                data.form = line[i]
+            elif field == "lemma":
+                data.lemma = line[i]
+            elif field == "upostag":
+                data.upostag = line[i]
             elif field == "xpostag":
-                value = self._parse_nullable_value(line[i])
-
+                data.xpostag = self._parse_nullable_value(line[i])
             elif field == "feats":
-                value = self._parse_dict_value(line[i])
-
+                data.feats = self._parse_dict_value(line[i])
             elif field == "head":
-                value = self._parse_int_value(line[i])
-
+                data.head = self._parse_int_value(line[i])
+            elif field == "deprel":
+                data.deprel = line[i]
             elif field == "deps":
-                value = self._parse_paired_list_value(line[i])
-
+                data.deps = self._parse_paired_list_value(line[i])
             elif field == "misc":
-                value = self._parse_dict_value(line[i])
-
-            else:
-                value = line[i]
-
-            data[field] = value
+                data.misc = self._parse_dict_value(line[i])
 
         return data
 

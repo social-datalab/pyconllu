@@ -3,6 +3,7 @@ import pytest
 from collections import OrderedDict
 from pyconllu.models import headdep
 from pyconllu.Sentence import Sentence
+from pyconllu.Token import Token
 
 
 @pytest.fixture
@@ -187,89 +188,55 @@ def parsed_sentence_from_string():
     return Sentence(
         comments=None,
         tokens=[
-            OrderedDict([
-                ("id", "1"), ("form", "O"), ("lemma", "o"),
-                ("upostag", "DET"), ("xpostag", "DET"),
-                ("feats", OrderedDict([
-                    ("Definite", "Def"), ("Gender", "Masc"),
-                    ("Number", "Sing"), ("PronType", "Art")])),
-                ("head", 2), ("deprel", "det"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "2"), ("form", "objetivo"),
-                ("lemma", "objetivo"), ("upostag", "NOUN"),
-                ("xpostag", "NOUN"), ("feats", OrderedDict([
-                    ("Gender", "Masc"), ("Number", "Sing")])),
-                ("head", 0), ("deprel", "root"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "3"), ("form", "de"), ("lemma", "de"),
-                ("upostag", "ADP"), ("xpostag", "ADP"), ("feats", None),
-                ("head", 6), ("deprel", "case"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "4"), ("form", "os"), ("lemma", "o"),
-                ("upostag", "DET"), ("xpostag", "DET"),
-                ("feats", OrderedDict([
-                    ("Definite", "Def"), ("Gender", "Masc"),
-                    ("Number", "Plur"), ("PronType", "Art")])),
-                ("head", 6), ("deprel", "det"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "5"), ("form", "principais"), ("lemma", "principal"),
-                ("upostag", "ADJ"), ("xpostag", "ADJ"),
-                ("feats", OrderedDict([
-                    ("Gender", "Masc"), ("Number", "Plur")])),
-                ("head", 6), ("deprel", "amod"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "6"), ("form", "hotéis"), ("lemma", "hotél"),
-                ("upostag", "NOUN"), ("xpostag", "NOUN"),
-                ("feats", OrderedDict([
-                    ("Gender", "Masc"), ("Number", "Plur")])),
-                ("head", 2), ("deprel", "nmod"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "7"), ("form", "de"), ("lemma", "de"),
-                ("upostag", "ADP"), ("xpostag", "ADP"), ("feats", None),
-                ("head", 9), ("deprel", "case"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "8"), ("form", "a"), ("lemma", "o"),
-                ("upostag", "DET"), ("xpostag", "DET"),
-                ("feats", OrderedDict([
-                    ("Definite", "Def"), ("Gender", "Fem"),
-                    ("Number", "Sing"), ("PronType", "Art")])),
-                ("head", 9), ("deprel", "det"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "9"), ("form", "cidade"), ("lemma", "cidade"),
-                ("upostag", "NOUN"), ("xpostag", "NOUN"),
-                ("feats", OrderedDict([
-                    ("Gender", "Fem"), ("Number", "Sing")])),
-                ("head", 6), ("deprel", "nmod"), ("deps", None),
-                ("misc", None)]),
-            OrderedDict([
-                ("id", "10"), ("form", "."), ("lemma", "."),
-                ("upostag", "PUNCT"), ("xpostag", "."), ("feats", None),
-                ("head", 2), ("deprel", "punct"), ("deps", None),
-                ("misc", None)])
+            Token(id="1", form="O", lemma="o", upostag="DET", xpostag="DET",
+                  feats=OrderedDict([
+                      ("Definite", "Def"), ("Gender", "Masc"),
+                      ("Number", "Sing"), ("PronType", "Art")]),
+                  head=2, deprel="det", deps=None, misc=None),
+            Token(id="2", form="objetivo", lemma="objetivo", upostag="NOUN",
+                  xpostag="NOUN", feats=OrderedDict([
+                      ("Gender", "Masc"), ("Number", "Sing")]),
+                  head=0, deprel="root", deps=None, misc=None),
+            Token(id="3", form="de", lemma="de", upostag="ADP", xpostag="ADP",
+                  feats=None, head=6, deprel="case", deps=None, misc=None),
+            Token(id="4", form="os", lemma="o", upostag="DET", xpostag="DET",
+                  feats=OrderedDict([
+                      ("Definite", "Def"), ("Gender", "Masc"),
+                      ("Number", "Plur"), ("PronType", "Art")]),
+                  head=6, deprel="det", deps=None, misc=None),
+            Token(id="5", form="principais", lemma="principal",
+                  upostag="ADJ", xpostag="ADJ", feats=OrderedDict([
+                      ("Gender", "Masc"), ("Number", "Plur")]),
+                  head=6, deprel="amod", deps=None, misc=None),
+            Token(id="6", form="hotéis", lemma="hotél",
+                  upostag="NOUN", xpostag="NOUN", feats=OrderedDict([
+                      ("Gender", "Masc"), ("Number", "Plur")]),
+                  head=2, deprel="nmod", deps=None, misc=None),
+            Token(id="7", form="de", lemma="de", upostag="ADP", xpostag="ADP",
+                  feats=None, head=9, deprel="case", deps=None, misc=None),
+            Token(id="8", form="a", lemma="o", upostag="DET", xpostag="DET",
+                  feats=OrderedDict([
+                     ("Definite", "Def"), ("Gender", "Fem"),
+                     ("Number", "Sing"), ("PronType", "Art")]),
+                  head=9, deprel="det", deps=None, misc=None),
+            Token(id="9", form="cidade", lemma="cidade",
+                  upostag="NOUN", xpostag="NOUN", feats=OrderedDict([
+                     ("Gender", "Fem"), ("Number", "Sing")]),
+                  head=6, deprel="nmod", deps=None, misc=None),
+            Token(id="10", form=".", lemma=".", upostag="PUNCT", xpostag=".",
+                  feats=None, head=2, deprel="punct", deps=None, misc=None)
         ],
         contractions=[
             (
-                OrderedDict([
-                    ("id", "3-4"), ("form", "dos"), ("lemma", "_"),
-                    ("upostag", "_"), ("xpostag", None), ("feats", None),
-                    ("head", None), ("deprel", "_"), ("deps", None),
-                    ("misc", None)]),
+                Token(id="3-4", form="dos", lemma="_", upostag="_",
+                      xpostag=None, feats=None, head=None, deprel="_",
+                      deps=None, misc=None),
                 2
             ),
             (
-                OrderedDict([
-                    ("id", "7-8"), ("form", "da"), ("lemma", "_"),
-                    ("upostag", "_"), ("xpostag", None), ("feats", None),
-                    ("head", None), ("deprel", "_"), ("deps", None),
-                    ("misc", None)]),
+                Token(id="7-8", form="da", lemma="_", upostag="_",
+                      xpostag=None, feats=None, head=None, deprel="_",
+                      deps=None, misc=None),
                 6
             )
         ],
@@ -285,190 +252,145 @@ def parsed_sentence_with_empty_node():
                  "they were wrung-out, they had left Wall Street, many for "
                  "good.",
         tokens=[
-            OrderedDict([
-                ('id', '1'), ('form', 'By'), ('lemma', 'by'),
-                ('upostag', 'ADP'), ('xpostag', 'IN'), ('feats', None),
-                ('head', 3), ('deprel', 'case'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '2'), ('form', 'late'), ('lemma', 'late'),
-                ('upostag', 'ADJ'), ('xpostag', 'JJ'), ('feats', OrderedDict([
-                    ('Degree', 'Pos')])),
-                ('head', 3), ('deprel', 'amod'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '3'), ('form', '1974'), ('lemma', '1974'),
-                ('upostag', 'NUM'), ('xpostag', 'CD'), ('feats', OrderedDict([
-                    ('NumType', 'Card')])),
-                ('head', 6), ('deprel', 'obl'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '4'), ('form', 'investors'), ('lemma', 'investor'),
-                ('upostag', 'NOUN'), ('xpostag', 'NNS'),
-                ('feats', OrderedDict([
-                    ('Number', 'Plur')])),
-                ('head', 6), ('deprel', 'nsubj'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '5'), ('form', 'were'), ('lemma', 'be'),
-                ('upostag', 'AUX'), ('xpostag', 'VBD'),
-                ('feats', OrderedDict([
-                    ('Mood', 'Ind'), ('Tense', 'Past'),
-                    ('VerbForm', 'Fin')])),
-                ('head', 6), ('deprel', 'cop'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '6'), ('form', 'dizzy'), ('lemma', 'dizzy'),
-                ('upostag', 'ADJ'), ('xpostag', 'JJ'),
-                ('feats', OrderedDict([
-                    ('Degree', 'Pos')])),
-                ('head', 0), ('deprel', 'root'), ('deps', 'SpaceAfter=No'),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '7'), ('form', ','), ('lemma', ','),
-                ('upostag', 'PUNCT'), ('xpostag', ','), ('feats', None),
-                ('head', 10), ('deprel', 'punct'),
-                ('deps', '_|CheckAttachment=6'), ('misc', None)]),
-            OrderedDict([
-                ('id', '8'), ('form', 'they'), ('lemma', 'they'),
-                ('upostag', 'PRON'), ('xpostag', 'PRP'),
-                ('feats', OrderedDict([
+            Token(
+                id="1", form="By", lemma="by", upostag="ADP", xpostag="IN",
+                feats=None, head=3, deprel="case", deps=None, misc=None),
+            Token(
+                id="2", form="late", lemma="late", upostag="ADJ",
+                xpostag="JJ", feats=OrderedDict([
+                    ('Degree', 'Pos')]),
+                head=3, deprel="amod", deps=None, misc=None),
+            Token(
+                id="3", form="1974", lemma="1974", upostag="NUM",
+                xpostag="CD", feats=OrderedDict([
+                    ('NumType', 'Card')]),
+                head=6, deprel="obl", deps=None, misc=None),
+            Token(
+                id="4", form="investors", lemma="investor", upostag="NOUN",
+                xpostag="NNS", feats=OrderedDict([
+                    ('Number', 'Plur')]),
+                head=6, deprel="nsubj", deps=None, misc=None),
+            Token(
+                id="5", form="were", lemma="be", upostag="AUX", xpostag="VBD",
+                feats=OrderedDict([
+                    ('Mood', 'Ind'), ('Tense', 'Past'), ('VerbForm', 'Fin')]),
+                head=6, deprel="cop", deps=None, misc=None),
+            Token(
+                id="6", form="dizzy", lemma="dizzy", upostag="ADJ",
+                xpostag="JJ", feats=OrderedDict([
+                    ('Degree', 'Pos')]),
+                head=0, deprel="root", deps="SpaceAfter=No", misc=None),
+            Token(
+                id="7", form=",", lemma=",", upostag="PUNCT", xpostag=",",
+                feats=None, head=10, deprel="punct",
+                deps="_|CheckAttachment=6", misc=None),
+            Token(
+                id="8", form="they", lemma="they", upostag="PRON",
+                xpostag="PRP", feats=OrderedDict([
                     ('Case', 'Nom'), ('Number', 'Plur'), ('Person', '3'),
-                    ('PronType', 'Prs')])),
-                ('head', 10), ('deprel', 'nsubj'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '9'), ('form', 'were'), ('lemma', 'be'),
-                ('upostag', 'AUX'), ('xpostag', 'VBD'),
-                ('feats', OrderedDict([
-                    ('Mood', 'Ind'), ('Tense', 'Past'),
-                    ('VerbForm', 'Fin')])),
-                ('head', 10), ('deprel', 'cop'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '10'), ('form', 'desperate'), ('lemma', 'desperate'),
-                ('upostag', 'ADJ'), ('xpostag', 'JJ'),
-                ('feats', OrderedDict([
-                    ('Degree', 'Pos')])),
-                ('head', 6), ('deprel', 'conj'),
-                ('deps', 'SpaceAfter=No|CheckReln=parataxis'),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '11'), ('form', ','), ('lemma', ','),
-                ('upostag', 'PUNCT'), ('xpostag', ','), ('feats', None),
-                ('head', 14), ('deprel', 'punct'),
-                ('deps', '_|CheckAttachment=10'), ('misc', None)]),
-            OrderedDict([
-                ('id', '12'), ('form', 'they'), ('lemma', 'they'),
-                ('upostag', 'PRON'), ('xpostag', 'PRP'),
-                ('feats', OrderedDict([
+                    ('PronType', 'Prs')]),
+                head=10, deprel="nsubj", deps=None, misc=None),
+            Token(
+                id="9", form="were", lemma="be", upostag="AUX", xpostag="VBD",
+                feats=OrderedDict([
+                    ('Mood', 'Ind'), ('Tense', 'Past'), ('VerbForm', 'Fin')]),
+                head=10, deprel="cop", deps=None, misc=None),
+            Token(
+                id="10", form="desperate", lemma="desperate", upostag="ADJ",
+                xpostag="JJ", feats=OrderedDict([
+                    ('Degree', 'Pos')]),
+                head=6, deprel="conj",
+                deps="SpaceAfter=No|CheckReln=parataxis", misc=None),
+            Token(
+                id="11", form=",", lemma=",", upostag="PUNCT", xpostag=",",
+                feats=None, head=14, deprel="punct",
+                deps="_|CheckAttachment=10", misc=None),
+            Token(
+                id="12", form="they", lemma="they", upostag="PRON",
+                xpostag="PRP", feats=OrderedDict([
                     ('Case', 'Nom'), ('Number', 'Plur'), ('Person', '3'),
-                    ('PronType', 'Prs')])),
-                ('head', 14), ('deprel', 'nsubj:pass'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '13'), ('form', 'were'), ('lemma', 'be'),
-                ('upostag', 'AUX'), ('xpostag', 'VBD'),
-                ('feats', OrderedDict([
-                    ('Mood', 'Ind'), ('Tense', 'Past'),
-                    ('VerbForm', 'Fin')])),
-                ('head', 14), ('deprel', 'aux:pass'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '14'), ('form', 'wrung'), ('lemma', 'wring'),
-                ('upostag', 'VERB'), ('xpostag', 'VBN'),
-                ('feats', OrderedDict([
+                    ('PronType', 'Prs')]),
+                head=14, deprel="nsubj:pass", deps=None, misc=None),
+            Token(
+                id="13", form="were", lemma="be",
+                upostag="AUX", xpostag="VBD",
+                feats=OrderedDict([
+                    ('Mood', 'Ind'), ('Tense', 'Past'), ('VerbForm', 'Fin')]),
+                head=14, deprel="aux:pass", deps=None, misc=None),
+            Token(
+                id="14", form="wrung", lemma="wring", upostag="VERB",
+                xpostag="VBN", feats=OrderedDict([
                     ('Tense', 'Past'), ('VerbForm', 'Part'),
-                    ('Voice', 'Pass')])),
-                ('head', 6), ('deprel', 'conj'),
-                ('deps', 'SpaceAfter=No|CheckReln=parataxis'),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '15'), ('form', '-'), ('lemma', '-'),
-                ('upostag', 'PUNCT'), ('xpostag', 'HYPH'), ('feats', None),
-                ('head', 14), ('deprel', 'punct'), ('deps', 'SpaceAfter=No'),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '16'), ('form', 'out'), ('lemma', 'out'),
-                ('upostag', 'ADP'), ('xpostag', 'RP'), ('feats', None),
-                ('head', 14), ('deprel', 'compound:prt'),
-                ('deps', 'SpaceAfter=No'), ('misc', None)]),
-            OrderedDict([
-                ('id', '17'), ('form', ','), ('lemma', ','),
-                ('upostag', 'PUNCT'), ('xpostag', ','), ('feats', None),
-                ('head', 20), ('deprel', 'punct'),
-                ('deps', '_|CheckAttachment=6'), ('misc', None)]),
-            OrderedDict([
-                ('id', '18'), ('form', 'they'), ('lemma', 'they'),
-                ('upostag', 'PRON'), ('xpostag', 'PRP'),
-                ('feats', OrderedDict([
+                    ('Voice', 'Pass')]),
+                head=6, deprel="conj",
+                deps="SpaceAfter=No|CheckReln=parataxis", misc=None),
+            Token(
+                id="15", form="-", lemma="-", upostag="PUNCT", xpostag="HYPH",
+                feats=None, head=14, deprel="punct", deps="SpaceAfter=No",
+                misc=None),
+            Token(
+                id="16", form="out", lemma="out", upostag="ADP",
+                xpostag="RP", feats=None, head=14, deprel="compound:prt",
+                deps="SpaceAfter=No", misc=None),
+            Token(
+                id="17", form=",", lemma=",", upostag="PUNCT", xpostag=",",
+                feats=None, head=20, deprel="punct",
+                deps="_|CheckAttachment=6", misc=None),
+            Token(
+                id="18", form="they", lemma="they", upostag="PRON",
+                xpostag="PRP", feats=OrderedDict([
                     ('Case', 'Nom'), ('Number', 'Plur'), ('Person', '3'),
-                    ('PronType', 'Prs')])),
-                ('head', 20), ('deprel', 'nsubj'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '19'), ('form', 'had'), ('lemma', 'have'),
-                ('upostag', 'AUX'), ('xpostag', 'VBD'),
-                ('feats', OrderedDict([
-                    ('Mood', 'Ind'), ('Tense', 'Past'), ('VerbForm', 'Fin')
-                ])),
-                ('head', 20), ('deprel', 'aux'),
-                ('deps', None), ('misc', None)]),
-            OrderedDict([
-                ('id', '20'), ('form', 'left'), ('lemma', 'leave'),
-                ('upostag', 'VERB'), ('xpostag', 'VBN'),
-                ('feats', OrderedDict([
-                    ('Tense', 'Past'), ('VerbForm', 'Part')])),
-                ('head', 6), ('deprel', 'conj'),
-                ('deps', '_|CheckReln=parataxis'), ('misc', None)]),
-            OrderedDict([
-                ('id', '21'), ('form', 'Wall'), ('lemma', 'Wall'),
-                ('upostag', 'PROPN'), ('xpostag', 'NNP'),
-                ('feats', OrderedDict([('Number', 'Sing')])),
-                ('head', 22), ('deprel', 'compound'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '22'), ('form', 'Street'), ('lemma', 'Street'),
-                ('upostag', 'PROPN'), ('xpostag', 'NNP'),
-                ('feats', OrderedDict([('Number', 'Sing')])),
-                ('head', 20), ('deprel', 'obj'),
-                ('deps', 'SpaceAfter=No'), ('misc', None)]),
-            OrderedDict([
-                ('id', '23'), ('form', ','), ('lemma', ','),
-                ('upostag', 'PUNCT'), ('xpostag', ','), ('feats', None),
-                ('head', 20), ('deprel', 'punct'),
-                ('deps', '_|CheckAttachment=22'), ('misc', None)]),
-            OrderedDict([
-                ('id', '24'), ('form', 'many'), ('lemma', 'many'),
-                ('upostag', 'ADJ'), ('xpostag', 'JJ'),
-                ('feats', OrderedDict([('Degree', 'Pos')])),
-                ('head', 6), ('deprel', 'parataxis'),
-                ('deps', '_|CheckAttachment=22|CheckReln=appos'),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '25'), ('form', 'for'), ('lemma', 'for'),
-                ('upostag', 'ADP'), ('xpostag', 'IN'), ('feats', None),
-                ('head', 26), ('deprel', 'case'), ('deps', None),
-                ('misc', None)]),
-            OrderedDict([
-                ('id', '26'), ('form', 'good'), ('lemma', 'good'),
-                ('upostag', 'ADJ'), ('xpostag', 'JJ'),
-                ('feats', OrderedDict([('Degree', 'Pos')])),
-                ('head', 24), ('deprel', 'orphan'),
-                ('deps', 'SpaceAfter=No|CheckReln=nmod'), ('misc', None)]),
-            OrderedDict([
-                ('id', '27'), ('form', '.'), ('lemma', '.'),
-                ('upostag', 'PUNCT'), ('xpostag', '.'), ('feats', None),
-                ('head', 6), ('deprel', 'punct'), ('deps', None),
-                ('misc', None)])],
+                    ('PronType', 'Prs')]),
+                head=20, deprel="nsubj", deps=None, misc=None),
+            Token(
+                id="19", form="had", lemma="have", upostag="AUX",
+                xpostag="VBD", feats=OrderedDict([
+                    ('Mood', 'Ind'), ('Tense', 'Past'), ('VerbForm', 'Fin')]),
+                head=20, deprel="aux", deps=None, misc=None),
+            Token(
+                id="20", form="left", lemma="leave", upostag="VERB",
+                xpostag="VBN", feats=OrderedDict([
+                    ('Tense', 'Past'), ('VerbForm', 'Part')]),
+                head=6, deprel="conj", deps="_|CheckReln=parataxis",
+                misc=None),
+            Token(
+                id="21", form="Wall", lemma="Wall", upostag="PROPN",
+                xpostag="NNP", feats=OrderedDict([
+                    ('Number', 'Sing')]),
+                head=22, deprel="compound", deps=None, misc=None),
+            Token(
+                id="22", form="Street", lemma="Street", upostag="PROPN",
+                xpostag="NNP", feats=OrderedDict([
+                    ('Number', 'Sing')]),
+                head=20, deprel="obj", deps="SpaceAfter=No", misc=None),
+            Token(
+                id="23", form=",", lemma=",", upostag="PUNCT", xpostag=",",
+                feats=None, head=20, deprel="punct",
+                deps="_|CheckAttachment=22", misc=None),
+            Token(
+                id="24", form="many", lemma="many", upostag="ADJ",
+                xpostag="JJ", feats=OrderedDict([
+                    ('Degree', 'Pos')]),
+                head=6, deprel="parataxis",
+                deps="_|CheckAttachment=22|CheckReln=appos", misc=None),
+            Token(
+                id="25", form="for", lemma="for", upostag="ADP", xpostag="IN",
+                feats=None, head=26, deprel="case", deps=None, misc=None),
+            Token(
+                id="26", form="good", lemma="good", upostag="ADJ",
+                xpostag="JJ", feats=OrderedDict([
+                    ('Degree', 'Pos')]),
+                head=24, deprel="orphan", deps="SpaceAfter=No|CheckReln=nmod",
+                misc=None),
+            Token(
+                id="27", form=".", lemma=".", upostag="PUNCT", xpostag=".",
+                feats=None, head=6, deprel="punct", deps=None, misc=None)],
         contractions=[],
-        empty_nodes=[(OrderedDict(
-            [('id', '24.1'), ('form', 'left'), ('lemma', 'left'),
-             ('upostag', 'VERB'), ('xpostag', 'VBN'),
-             ('feats', OrderedDict([
-                 ('Tense', 'Past'), ('VerbForm', 'Part')])),
-             ('head', None), ('deprel', '_'), ('deps', 'CopyOf=6'),
-             ('misc', None)]), 23)])
+        empty_nodes=[(Token(
+            id="24.1", form="left", lemma="left", upostag="VERB",
+            xpostag="VBN", feats=OrderedDict([
+                 ('Tense', 'Past'), ('VerbForm', 'Part')]),
+            head=None, deprel="_", deps="CopyOf=6", misc=None), 23)])
 
 
 @pytest.fixture
@@ -481,210 +403,158 @@ def parsed_sentence_from_file():
                      "en la evolución del GIM carotídeo en pacientes con "
                      "enfermedad coronaria.",
             tokens=[
-                OrderedDict([
-                    ("id", "1"), ("form", "El"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0MS0"),
-                    ("feats", OrderedDict([
+                Token(
+                    id="1", form="El", lemma="el", upostag="DET",
+                    xpostag="DA0MS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Masc"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 2), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "2"), ("form", "objetivo"), ("lemma", "objetivo"),
-                    ("upostag", "NOUN"), ("xpostag", "NCMS000"),
-                    ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 8), ("deprel", "nsubj:pass"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "3"), ("form", "de"), ("lemma", "de"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 5), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "4"), ("form", "este"), ("lemma", "este"),
-                    ("upostag", "DET"), ("xpostag", "DD0MS0"),
-                    ("feats", OrderedDict([
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=2, deprel="det", deps=None, misc=None),
+                Token(
+                    id="2", form="objetivo", lemma="objetivo",
+                    upostag="NOUN", xpostag="NCMS000",
+                    feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]), head=8,
+                    deprel="nsubj:pass", deps=None, misc=None),
+                Token(
+                    id="3", form="de", lemma="de", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=5, deprel="case", deps=None, misc=None),
+                Token(
+                    id="4", form="este", lemma="este", upostag="DET",
+                    xpostag="DD0MS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Masc"),
-                        ("Number", "Sing"), ("PronType", "Dem")])),
-                    ("head", 5), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "5"), ("form", "trabajo"), ("lemma", "trabajo"),
-                    ("upostag", "NOUN"), ("xpostag", "NCMS000"),
-                    ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 2), ("deprel", "nmod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "6"), ("form", "ha"), ("lemma", "haber"),
-                    ("upostag", "AUX"), ("xpostag", "VSIP3S0"),
-                    ("feats", OrderedDict([
+                        ("Number", "Sing"), ("PronType", "Dem")]),
+                    head=5, deprel="det", deps=None, misc=None),
+                Token(
+                    id="5", form="trabajo", lemma="trabajo", upostag="NOUN",
+                    xpostag="NCMS000", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]),
+                    head=2, deprel="nmod", deps=None, misc=None),
+                Token(
+                    id="6", form="ha", lemma="haber", upostag="AUX",
+                    xpostag="VSIP3S0", feats=OrderedDict([
                         ("Mood", "Ind"), ("Number", "Sing"),
-                        ("Person", "3"), ("Tense", "Pres")])),
-                    ("head", 8), ("deprel", "aux"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "7"), ("form", "sido"), ("lemma", "ser"),
-                    ("upostag", "AUX"), ("xpostag", "VSP00SM"),
-                    ("feats", OrderedDict([
+                        ("Person", "3"), ("Tense", "Pres")]),
+                    head=8, deprel="aux", deps=None, misc=None),
+                Token(
+                    id="7", form="sido", lemma="ser", upostag="AUX",
+                    xpostag="VSP00SM", feats=OrderedDict([
                         ("Gender", "Masc"), ("Number", "Sing"),
-                        ("VerbForm", "Part")])),
-                    ("head", 8), ("deprel", "aux:pass"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "8"), ("form", "conocer"), ("lemma", "conocer"),
-                    ("upostag", "VERB"), ("xpostag", "VMN0000"),
-                    ("feats", OrderedDict([
-                        ("VerbForm", "Inf")])),
-                    ("head", 0), ("deprel", "root"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "9"), ("form", "si"), ("lemma", "si"),
-                    ("upostag", "SCONJ"), ("xpostag", "CS"), ("feats", None),
-                    ("head", 14), ("deprel", "mark"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "10"), ("form", "los"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0MP0"),
-                    ("feats", OrderedDict([
+                        ("VerbForm", "Part")]),
+                    head=8, deprel="aux:pass", deps=None, misc=None),
+                Token(
+                    id="8", form="conocer", lemma="conocer", upostag="VERB",
+                    xpostag="VMN0000", feats=OrderedDict([
+                        ("VerbForm", "Inf")]),
+                    head=0, deprel="root", deps=None, misc=None),
+                Token(
+                    id="9", form="si", lemma="si", upostag="SCONJ",
+                    xpostag="CS", feats=None, head=14, deprel="mark",
+                    deps=None, misc=None),
+                Token(
+                    id="10", form="los", lemma="el", upostag="DET",
+                    xpostag="DA0MP0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Masc"),
-                        ("Number", "Plur"), ("PronType", "Art")])),
-                    ("head", 11), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "11"), ("form", "valores"), ("lemma", "valor"),
-                    ("upostag", "NOUN"), ("xpostag", "NCMP000"),
-                    ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Plur")])),
-                    ("head", 14), ("deprel", "nsubj"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "12"), ("form", "de"), ("lemma", "de"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 13), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "13"), ("form", "homocisteína"),
-                    ("lemma", "homocisteína"), ("upostag", "NOUN"),
-                    ("xpostag", "NCFS000"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 11), ("deprel", "nmod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "14"), ("form", "influyen"), ("lemma", "influir"),
-                    ("upostag", "VERB"), ("xpostag", "VMIP3P0"),
-                    ("feats", OrderedDict([
+                        ("Number", "Plur"), ("PronType", "Art")]),
+                    head=11, deprel="det", deps=None, misc=None),
+                Token(
+                    id="11", form="valores", lemma="valor", upostag="NOUN",
+                    xpostag="NCMP000", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Plur")]),
+                    head=14, deprel="nsubj", deps=None, misc=None),
+                Token(
+                    id="12", form="de", lemma="de", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=13, deprel="case", deps=None, misc=None),
+                Token(
+                    id="13", form="homocisteína", lemma="homocisteína",
+                    upostag="NOUN", xpostag="NCFS000", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=11, deprel="nmod", deps=None, misc=None),
+                Token(
+                    id="14", form="influyen", lemma="influir", upostag="VERB",
+                    xpostag="VMIP3P0", feats=OrderedDict([
                         ("Mood", "Ind"), ("Number", "Plur"), ("Person", "3"),
-                        ("Tense", "Pres")])),
-                    ("head", 8), ("deprel", "advcl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "15"), ("form", "en"), ("lemma", "en"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 17), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "16"), ("form", "la"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0FS0"),
-                    ("feats", OrderedDict([
+                        ("Tense", "Pres")]),
+                    head=8, deprel="advcl", deps=None, misc=None),
+                Token(
+                    id="15", form="en", lemma="en", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=17, deprel="case", deps=None, misc=None),
+                Token(
+                    id="16", form="la", lemma="el", upostag="DET",
+                    xpostag="DA0FS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Fem"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 17), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "17"), ("form", "evolución"),
-                    ("lemma", "evolución"), ("upostag", "NOUN"),
-                    ("xpostag", "NCFS000"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 14), ("deprel", "obl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "17-18"), ("form", "del"), ("lemma", "_"),
-                    ("upostag", "_"), ("xpostag", None), ("feats", None),
-                    ("head", None), ("deprel", "_"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "18"), ("form", "de"), ("lemma", "de"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 20), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "19"), ("form", "el"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0MS0"),
-                    ("feats", OrderedDict([
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=17, deprel="det", deps=None, misc=None),
+                Token(
+                    id="17", form="evolución", lemma="evolución",
+                    upostag="NOUN", xpostag="NCFS000", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=14, deprel="obl", deps=None, misc=None),
+                Token(
+                    id="17-18", form="del", lemma="_", upostag="_",
+                    xpostag=None, feats=None, head=None, deprel="_",
+                    deps=None, misc=None),
+                Token(
+                    id="18", form="de", lemma="de", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=20, deprel="case", deps=None, misc=None),
+                Token(
+                    id="19", form="el", lemma="el", upostag="DET",
+                    xpostag="DA0MS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Masc"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 20), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "20"), ("form", "GIM"), ("lemma", "gim"),
-                    ("upostag", "PROPN"), ("xpostag", "NP00000"),
-                    ("feats", None), ("head", 17), ("deprel", "nmod"),
-                    ("deps", None), ("misc", None)]),
-                OrderedDict([
-                    ("id", "21"), ("form", "carotídeo"),
-                    ("lemma", "carotídeo"), ("upostag", "ADJ"),
-                    ("xpostag", "AQ0MS0"), ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 20), ("deprel", "amod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "22"), ("form", "en"), ("lemma", "en"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 23), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "23"), ("form", "pacientes"),
-                    ("lemma", "paciente"), ("upostag", "NOUN"),
-                    ("xpostag", "NCCP000"), ("feats", OrderedDict([
-                        ("Gender", "Com"), ("Number", "Plur")])),
-                    ("head", 8), ("deprel", "obl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "24"), ("form", "con"), ("lemma", "con"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 25), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "25"), ("form", "enfermedad"),
-                    ("lemma", "enfermedad"), ("upostag", "NOUN"),
-                    ("xpostag", "NCFS000"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 8), ("deprel", "obl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "26"), ("form", "coronaria"),
-                    ("lemma", "coronario"), ("upostag", "ADJ"),
-                    ("xpostag", "AQ0FS0"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 25), ("deprel", "amod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "27"), ("form", "."), ("lemma", "."),
-                    ("upostag", "PUNCT"), ("xpostag", "Fp"),
-                    ("feats", None), ("head", 8), ("deprel", "punct"),
-                    ("deps", None), ("misc", None)])
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=20, deprel="det", deps=None, misc=None),
+                Token(
+                    id="20", form="GIM", lemma="gim", upostag="PROPN",
+                    xpostag="NP00000", feats=None, head=17, deprel="nmod",
+                    deps=None, misc=None),
+                Token(
+                    id="21", form="carotídeo", lemma="carotídeo",
+                    upostag="ADJ", xpostag="AQ0MS0", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]),
+                    head=20, deprel="amod", deps=None, misc=None),
+                Token(
+                    id="22", form="en", lemma="en", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=23, deprel="case", deps=None, misc=None),
+                Token(
+                    id="23", form="pacientes", lemma="paciente",
+                    upostag="NOUN", xpostag="NCCP000", feats=OrderedDict([
+                        ("Gender", "Com"), ("Number", "Plur")]),
+                    head=8, deprel="obl", deps=None, misc=None),
+                Token(
+                    id="24", form="con", lemma="con", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=25, deprel="case", deps=None, misc=None),
+                Token(
+                    id="25", form="enfermedad", lemma="enfermedad",
+                    upostag="NOUN", xpostag="NCFS000", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=8, deprel="obl", deps=None, misc=None),
+                Token(
+                    id="26", form="coronaria", lemma="coronario",
+                    upostag="ADJ", xpostag="AQ0FS0", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=25, deprel="amod", deps=None, misc=None),
+                Token(
+                    id="27", form=".", lemma=".", upostag="PUNCT",
+                    xpostag="Fp", feats=None, head=8, deprel="punct",
+                    deps=None, misc=None)
             ],
             contractions=[
                 (
-                    OrderedDict([
-                        ("id", "17-18"), ("form", "del"), ("lemma", "_"),
-                        ("upostag", "_"), ("xpostag", None), ("feats", None),
-                        ("head", None), ("deprel", "_"), ("deps", None),
-                        ("misc", None)]),
+                    Token(
+                        id="17-18", form="del", lemma="_", upostag="_",
+                        xpostag=None, feats=None, head=None, deprel="_",
+                        deps=None, misc=None),
                     16
                 )
             ],
@@ -695,67 +565,51 @@ def parsed_sentence_from_file():
             comments="# sent_id = 2\n# text = La angiografía coronaria se "
                      "realizó a 164 pacientes.",
             tokens=[
-                OrderedDict([
-                    ("id", "1"), ("form", "La"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0FS0"),
-                    ("feats", OrderedDict([
+                Token(
+                    id="1", form="La", lemma="el", upostag="DET",
+                    xpostag="DA0FS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Fem"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 2), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "2"), ("form", "angiografía"),
-                    ("lemma", "angiografía"), ("upostag", "NOUN"),
-                    ("xpostag", "NCFS000"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 5), ("deprel", "nsubj"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "3"), ("form", "coronaria"),
-                    ("lemma", "coronario"), ("upostag", "ADJ"),
-                    ("xpostag", "AQ0FS0"), ("feats", OrderedDict([
-                        ("Gender", "Fem"), ("Number", "Sing")])),
-                    ("head", 2), ("deprel", "amod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "4"), ("form", "se"), ("lemma", "se"),
-                    ("upostag", "PRON"), ("xpostag", "P00CN000"),
-                    ("feats", None), ("head", 5), ("deprel", "iobj"),
-                    ("deps", None), ("misc", None)]),
-                OrderedDict([
-                    ("id", "5"), ("form", "realizó"),
-                    ("lemma", "realizar"), ("upostag", "VERB"),
-                    ("xpostag", "VMIS3S0"), ("feats", OrderedDict([
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=2, deprel="det", deps=None, misc=None),
+                Token(
+                    id="2", form="angiografía", lemma="angiografía",
+                    upostag="NOUN", xpostag="NCFS000", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=5, deprel="nsubj", deps=None, misc=None),
+                Token(
+                    id="3", form="coronaria", lemma="coronario",
+                    upostag="ADJ", xpostag="AQ0FS0", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                    head=2, deprel="amod", deps=None, misc=None),
+                Token(
+                    id="4", form="se", lemma="se", upostag="PRON",
+                    xpostag="P00CN000", feats=None, head=5, deprel="iobj",
+                    deps=None, misc=None),
+                Token(
+                    id="5", form="realizó", lemma="realizar", upostag="VERB",
+                    xpostag="VMIS3S0", feats=OrderedDict([
                         ("Mood", "Ind"), ("Number", "Sing"),
-                        ("Person", "3"), ("Tense", "Past")])),
-                    ("head", 0), ("deprel", "root"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "6"), ("form", "a"), ("lemma", "a"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 8), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "7"), ("form", "164"), ("lemma", "164"),
-                    ("upostag", "NUM"), ("xpostag", "Z"),
-                    ("feats", OrderedDict([
-                        ("NumType", "Card")])),
-                    ("head", 8), ("deprel", "nummod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "8"), ("form", "pacientes"), ("lemma", "paciente"),
-                    ("upostag", "NOUN"), ("xpostag", "NCCP000"),
-                    ("feats", OrderedDict([
-                        ("Gender", "Com"), ("Number", "Plur")])),
-                    ("head", 5), ("deprel", "obl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "9"), ("form", "."), ("lemma", "."),
-                    ("upostag", "PUNCT"), ("xpostag", "Fp"), ("feats", None),
-                    ("head", 5), ("deprel", "punct"), ("deps", None),
-                    ("misc", None)])],
+                        ("Person", "3"), ("Tense", "Past")]),
+                    head=0, deprel="root", deps=None, misc=None),
+                Token(
+                    id="6", form="a", lemma="a", upostag="ADP", xpostag="SP",
+                    feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=8, deprel="case", deps=None, misc=None),
+                Token(
+                    id="7", form="164", lemma="164", upostag="NUM",
+                    xpostag="Z", feats=OrderedDict([
+                        ("NumType", "Card")]),
+                    head=8, deprel="nummod", deps=None, misc=None),
+                Token(
+                    id="8", form="pacientes", lemma="paciente",
+                    upostag="NOUN", xpostag="NCCP000", feats=OrderedDict([
+                        ("Gender", "Com"), ("Number", "Plur")]),
+                    head=5, deprel="obl", deps=None, misc=None),
+                Token(
+                    id="9", form=".", lemma=".", upostag="PUNCT",
+                    xpostag="Fp", feats=None, head=5, deprel="punct",
+                    deps=None, misc=None)],
             contractions=[],
             empty_nodes=[]
         ),
@@ -764,70 +618,53 @@ def parsed_sentence_from_file():
             comments="# sent_id = 3\n# text = Ningún paciente recibió "
                      "tratamiento vitamínico durante el estudio.",
             tokens=[
-                OrderedDict([
-                    ("id", "1"), ("form", "Ningún"), ("lemma", "ninguno"),
-                    ("upostag", "DET"), ("xpostag", "DI0MS0"),
-                    ("feats", OrderedDict([
+                Token(
+                    id="1", form="Ningún", lemma="ninguno", upostag="DET",
+                    xpostag="DI0MS0", feats=OrderedDict([
                         ("Definite", "Ind"), ("Gender", "Masc"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 2), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "2"), ("form", "paciente"), ("lemma", "paciente"),
-                    ("upostag", "NOUN"), ("xpostag", "NCCS000"),
-                    ("feats", OrderedDict([
-                        ("Gender", "Com"), ("Number", "Sing")])),
-                    ("head", 3), ("deprel", "nsubj"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "3"), ("form", "recibió"), ("lemma", "recibir"),
-                    ("upostag", "VERB"), ("xpostag", "VMIS3S0"),
-                    ("feats", OrderedDict([
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=2, deprel="det", deps=None, misc=None),
+                Token(
+                    id="2", form="paciente", lemma="paciente",
+                    upostag="NOUN", xpostag="NCCS000", feats=OrderedDict([
+                        ("Gender", "Com"), ("Number", "Sing")]),
+                    head=3, deprel="nsubj", deps=None, misc=None),
+                Token(
+                    id="3", form="recibió", lemma="recibir", upostag="VERB",
+                    xpostag="VMIS3S0", feats=OrderedDict([
                         ("Mood", "Ind"), ("Number", "Sing"), ("Person", "3"),
-                        ("Tense", "Past")])),
-                    ("head", 0), ("deprel", "root"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "4"), ("form", "tratamiento"),
-                    ("lemma", "tratamiento"), ("upostag", "NOUN"),
-                    ("xpostag", "NCMS000"), ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 3), ("deprel", "obj"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "5"), ("form", "vitamínico"),
-                    ("lemma", "vitamínico"), ("upostag", "ADJ"),
-                    ("xpostag", "AQ0MS0"), ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 4), ("deprel", "amod"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "6"), ("form", "durante"), ("lemma", "durante"),
-                    ("upostag", "ADP"), ("xpostag", "SP"),
-                    ("feats", OrderedDict([
-                        ("AdpType", "Prep")])),
-                    ("head", 8), ("deprel", "case"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "7"), ("form", "el"), ("lemma", "el"),
-                    ("upostag", "DET"), ("xpostag", "DA0MS0"),
-                    ("feats", OrderedDict([
+                        ("Tense", "Past")]),
+                    head=0, deprel="root", deps=None, misc=None),
+                Token(
+                    id="4", form="tratamiento", lemma="tratamiento",
+                    upostag="NOUN", xpostag="NCMS000", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]),
+                    head=3, deprel="obj", deps=None, misc=None),
+                Token(
+                    id="5", form="vitamínico", lemma="vitamínico",
+                    upostag="ADJ", xpostag="AQ0MS0", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]),
+                    head=4, deprel="amod", deps=None, misc=None),
+                Token(
+                    id="6", form="durante", lemma="durante", upostag="ADP",
+                    xpostag="SP", feats=OrderedDict([
+                        ("AdpType", "Prep")]),
+                    head=8, deprel="case", deps=None, misc=None),
+                Token(
+                    id="7", form="el", lemma="el", upostag="DET",
+                    xpostag="DA0MS0", feats=OrderedDict([
                         ("Definite", "Def"), ("Gender", "Masc"),
-                        ("Number", "Sing"), ("PronType", "Art")])),
-                    ("head", 8), ("deprel", "det"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "8"), ("form", "estudio"),
-                    ("lemma", "estudio"), ("upostag", "NOUN"),
-                    ("xpostag", "NCMS000"), ("feats", OrderedDict([
-                        ("Gender", "Masc"), ("Number", "Sing")])),
-                    ("head", 3), ("deprel", "obl"), ("deps", None),
-                    ("misc", None)]),
-                OrderedDict([
-                    ("id", "9"), ("form", "."), ("lemma", "."),
-                    ("upostag", "PUNCT"), ("xpostag", "Fp"), ("feats", None),
-                    ("head", 3), ("deprel", "punct"), ("deps", None),
-                    ("misc", None)])],
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                    head=8, deprel="det", deps=None, misc=None),
+                Token(
+                    id="8", form="estudio", lemma="estudio", upostag="NOUN",
+                    xpostag="NCMS000", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Sing")]),
+                    head=3, deprel="obl", deps=None, misc=None),
+                Token(
+                    id="9", form=".", lemma=".", upostag="PUNCT",
+                    xpostag="Fp", feats=None, head=3, deprel="punct",
+                    deps=None, misc=None)],
             contractions=[],
             empty_nodes=[]
         ),
@@ -852,11 +689,11 @@ def wordforms():
 
 @pytest.fixture
 def root():
-    return OrderedDict([
-        ("id", "2"), ("form", "objetivo"), ("lemma", "objetivo"),
-        ("upostag", "NOUN"), ("xpostag", "NOUN"), ("feats", OrderedDict([
-            ("Gender", "Masc"), ("Number", "Sing")])),
-        ("head", 0), ("deprel", "root"), ("deps", None), ("misc", None)])
+    return Token(
+        id="2", form="objetivo", lemma="objetivo", upostag="NOUN",
+        xpostag="NOUN", feats=OrderedDict([
+            ("Gender", "Masc"), ("Number", "Sing")]),
+        head=0, deprel="root", deps=None, misc=None)
 
 
 @pytest.fixture

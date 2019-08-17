@@ -6,6 +6,7 @@ from collections import OrderedDict
 from pyconllu import CoNLLU
 from pyconllu.exceptions import ParseException
 from pyconllu.Sentence import Sentence
+from pyconllu.Token import Token
 
 
 @pytest.fixture(scope="session")
@@ -72,7 +73,7 @@ def test_parse_file_returns_iterator(sentences_parsed_from_file):
 def test_parse_file_output_is_list_of_ordereddicts(sentences_parsed_from_file):
     sent = next(sentences_parsed_from_file)
     assert (isinstance(sent, Sentence) and
-            all(isinstance(s, OrderedDict) for s in sent.tokens))
+            all(isinstance(s, Token) for s in sent.tokens))
 
 
 def test_parse_empty_sentence(conllu, empty_sentence):
@@ -227,18 +228,17 @@ def test_conllu_line_contains_empty_node(conllu, line, expected):
     (
         "5\tprincipais\tprincipal\tADJ\tADJ\tGender=Masc|Number=Plur\t6\tamod\
 \t_\t_",
-        OrderedDict([
-            ('id', '5'), ('form', 'principais'), ('lemma', 'principal'),
-            ('upostag', 'ADJ'), ('xpostag', 'ADJ'), ('feats', OrderedDict([
-                ('Gender', 'Masc'), ('Number', 'Plur')])),
-            ('head', 6), ('deprel', 'amod'), ('deps', None), ('misc', None)])
+        Token(
+            id="5", form="principais", lemma="principal", upostag="ADJ",
+            xpostag="ADJ", feats=OrderedDict([
+                ('Gender', 'Masc'), ('Number', 'Plur')]),
+            head=6, deprel="amod", deps=None, misc=None)
     ),
     (
         "3-4\tdos\t_\t_\t_\t_\t_\t_\t_\t_",
-        OrderedDict([
-            ('id', '3-4'), ('form', 'dos'), ('lemma', '_'), ('upostag', '_'),
-            ('xpostag', None), ('feats', None), ('head', None),
-            ('deprel', '_'), ('deps', None), ('misc', None)])
+        Token(
+            id="3-4", form="dos", lemma="_", upostag="_", xpostag=None,
+            feats=None, head=None, deprel="_", deps=None, misc=None)
     )
 ])
 def test_parse_conllu_rawline(conllu, line, expected):
@@ -285,7 +285,7 @@ def test_parse_paired_list_value(conllu, value, expected):
         "Mood=Ind|Number=Plur|Person=3|Tense=Pres"
     ),
     (
-        None, None
+        None, "_"
     ),
     (
         OrderedDict([
@@ -294,7 +294,8 @@ def test_parse_paired_list_value(conllu, value, expected):
     ),
 ])
 def test_expand_features(conllu, features, expanded_features):
-    assert conllu._expand_features(features) == expanded_features
+    token = Token()
+    assert token._expand_features(features) == expanded_features
 
 
 @pytest.mark.parametrize("tag,expected", [
@@ -308,18 +309,16 @@ def test_tag_is_propername(conllu, tag, expected):
 
 @pytest.mark.parametrize("token,lemma", [
     (
-        OrderedDict([
-            ("id", "7"), ("form", "de"), ("lemma", "de"), ("upostag", "ADP"),
-            ("xpostag", "ADP"), ("feats", None), ("head", 9),
-            ("deprel", "case"), ("deps", None), ("misc", None)]),
+        Token(
+            id="7", form="de", lemma="de", upostag="ADP", xpostag="ADP",
+            feats=None, head=9, deprel="case", deps=None, misc=None),
         "de"
     ),
     (
-        OrderedDict([
-            ("id", "20"), ("form", "GIM"), ("lemma", "gim"),
-            ("upostag", "PROPN"), ("xpostag", "NP00000"), ("feats", None),
-            ("head", 17), ("deprel", "nmod"), ("deps", None),
-            ("misc", None)]),
+        Token(
+            id="20", form="GIM", lemma="gim", upostag="PROPN",
+            xpostag="NP00000", feats=None, head=17, deprel="nmod", deps=None,
+            misc=None),
         "GIM"
     )
 ])
