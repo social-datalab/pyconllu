@@ -4,7 +4,7 @@
 class Sentence(object):
     def __init__(self, tokens, comments, contractions, empty_nodes):
         self.tokens = tokens
-        self.comments = comments
+        self.comments = comments or ""
         self.contractions = contractions
         self.empty_nodes = empty_nodes
 

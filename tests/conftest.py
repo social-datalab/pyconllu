@@ -186,7 +186,7 @@ def conllu_string_with_empty_node():
 @pytest.fixture
 def parsed_sentence_from_string():
     return Sentence(
-        comments=None,
+        comments="",
         tokens=[
             Token(id="1", form="O", lemma="o", upostag="DET", xpostag="DET",
                   feats=OrderedDict([

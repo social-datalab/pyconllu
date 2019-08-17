@@ -51,7 +51,7 @@ class CoNLLU(object):
 
         Sentence
         (
-            comments=None,
+            comments="",
             tokens=[
                 OrderedDict([
                     ("id", "1"), ("form", "O"), ("lemma", "o"),
@@ -80,7 +80,7 @@ class CoNLLU(object):
             empty_nodes=[]
         )
         """
-        comments = None
+        comments = ""
 
         if re.search(r"^\s*#", raw_sentence):
             comments = "\n".join(

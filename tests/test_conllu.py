@@ -79,7 +79,7 @@ def test_parse_file_output_is_list_of_ordereddicts(sentences_parsed_from_file):
 def test_parse_empty_sentence(conllu, empty_sentence):
     assert (conllu.parse_sentence(empty_sentence) ==
             Sentence(
-                comments=None, tokens=[], contractions=[], empty_nodes=[]))
+                comments="", tokens=[], contractions=[], empty_nodes=[]))
 
 
 def test_parse_sentence_with_errors(conllu, sentence_with_errors):
