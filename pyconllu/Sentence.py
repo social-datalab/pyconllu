@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 class Sentence(object):
     def __init__(self, tokens, comments, contractions, empty_nodes):
         self.tokens = tokens

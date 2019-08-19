@@ -438,10 +438,7 @@ class CoNLLU(object):
         return ""
 
     def _convert_tokens_to_conllu(self, tokens):
-        raw_sentence = ""
-        for token in tokens:
-            raw_sentence += str(token) + "\n"
-        return raw_sentence
+        return "".join([str(token) + "\n" for token in tokens])
 
     def _read_sentences_from_file(self, ifile):
         """

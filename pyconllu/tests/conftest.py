@@ -183,6 +183,21 @@ def conllu_string_with_empty_node():
 """  # noqa
 
 
+@pytest.fixture()
+def token_string():
+    return ("12	defensivo	defensivo	ADJ	ADJ	"
+            "Gender=Masc|Number=Sing	11	amod	SpaceAfter=No	_")
+
+
+@pytest.fixture()
+def parsed_token_from_string():
+    return Token(
+        id="12", form="defensivo", lemma="defensivo", upostag="ADJ",
+        xpostag="ADJ", feats=OrderedDict([
+            ('Gender', 'Masc'), ('Number', 'Sing')]),
+        head=11, deprel="amod", deps="SpaceAfter=No", misc=None)
+
+
 @pytest.fixture
 def parsed_sentence_from_string():
     return Sentence(
@@ -818,6 +833,11 @@ o o DET
 principais principal ADJ
 hotéis hotél NOUN
 """
+
+
+@pytest.fixture
+def line_with_errors():
+    return "5\tprincipais\tprincipal\tADJ\n"
 
 
 @pytest.fixture

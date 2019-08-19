@@ -33,25 +33,52 @@ def sentences_parsed_from_file(conllu, conllu_filename, conllu_file_contents):
 
 def test_read_conllu_from_file(conllu, conllu_filename, conllu_file_contents):
     filename = conllu_filename(conllu_file_contents)
-    concat_sentence = [
+    sentences = [
         sentence for sentence in conllu._read_sentences_from_file(
             filename)]
-    assert "\n".join(concat_sentence) == conllu_file_contents
+    assert "\n".join(sentences) == conllu_file_contents
+    assert len(sentences) == 3
 
 
-def test_read_conllu_with_multiple_separators(
+def test_read_conllu_from_file_with_multiple_separators(
         conllu, conllu_filename, conllu_multiple_strings):
     filename = conllu_filename(conllu_multiple_strings)
     sentences = [
         sentence for sentence in conllu._read_sentences_from_file(
             filename)]
-
     assert len(sentences) == 3
+
+
+def test_parse_sentence_returns_sentence(conllu, conllu_string):
+    assert isinstance(conllu.parse_sentence(conllu_string), Sentence) is True
 
 
 def test_parse_sentence_from_string(
         conllu, conllu_string, parsed_sentence_from_string):
     assert conllu.parse_sentence(conllu_string) == parsed_sentence_from_string
+
+
+def test_parse_empty_sentence(conllu, empty_sentence):
+    assert (conllu.parse_sentence(empty_sentence) ==
+            Sentence(
+                comments="", tokens=[], contractions=[], empty_nodes=[]))
+
+
+def test_parse_sentence_with_errors_raises_exception(
+        conllu, sentence_with_errors):
+    with pytest.raises(Exception) as exc:
+        conllu.parse_sentence(sentence_with_errors)
+    assert (str(exc.value) ==
+            "Invalid format, line must contain ten fields separated "
+            "by tabs.")
+
+
+def test_parse_sentence_with_empty_node(
+        conllu,
+        conllu_string_with_empty_node,
+        parsed_sentence_with_empty_node):
+    assert (conllu.parse_sentence(conllu_string_with_empty_node) ==
+            parsed_sentence_with_empty_node)
 
 
 def test_parse_last_sentence_from_file(
@@ -69,32 +96,10 @@ def test_parse_file_returns_iterator(sentences_parsed_from_file):
     assert isinstance(sentences_parsed_from_file, GeneratorType)
 
 
-def test_parse_file_output_is_list_of_ordereddicts(sentences_parsed_from_file):
-    sent = next(sentences_parsed_from_file)
-    assert (isinstance(sent, Sentence) and
-            all(isinstance(s, Token) for s in sent.tokens))
-
-
-def test_parse_empty_sentence(conllu, empty_sentence):
-    assert (conllu.parse_sentence(empty_sentence) ==
-            Sentence(
-                comments="", tokens=[], contractions=[], empty_nodes=[]))
-
-
-def test_parse_sentence_with_errors(conllu, sentence_with_errors):
-    with pytest.raises(Exception) as exc:
-        conllu.parse_sentence(sentence_with_errors)
-    assert (str(exc.value) ==
-            "Invalid format, line must contain ten fields separated "
-            "by tabs.")
-
-
-def test_parse_sentence_with_empty_node(
-        conllu,
-        conllu_string_with_empty_node,
-        parsed_sentence_with_empty_node):
-    assert (conllu.parse_sentence(conllu_string_with_empty_node) ==
-            parsed_sentence_with_empty_node)
+def test_parse_file_output_contains_sentences(sentences_parsed_from_file):
+    for sentence in sentences_parsed_from_file:
+        assert (isinstance(sentence, Sentence) and
+                all(isinstance(s, Token) for s in sentence.tokens))
 
 
 def test_generate_conllu_from_sentence(
@@ -118,9 +123,10 @@ def test_generate_conllu_from_file(
 
 def test_convert_tokens_to_conllu_line(
         conllu, parsed_sentence_from_string, conllu_string):
-    expected = "\n".join(conllu_string.split("\n")[:2]) + "\n"
+    expected = "\n".join(conllu_string.split("\n")[3:7]) + "\n"
+
     assert conllu._convert_tokens_to_conllu(
-        parsed_sentence_from_string.tokens[:2]) == expected
+        parsed_sentence_from_string.tokens[2:6]) == expected
 
 
 def test_get_lemmas_from_sentence(
@@ -238,10 +244,30 @@ def test_conllu_line_contains_empty_node(conllu, line, expected):
         Token(
             id="3-4", form="dos", lemma="_", upostag="_", xpostag=None,
             feats=None, head=None, deprel="_", deps=None, misc=None)
-    )
+    ),
+    (
+        "24.1\tleft\tleft\tVERB\tVBN\tTense=Past|VerbForm=Part\t_\t_\tCopyOf=6\t_",  # noqa
+        Token(
+            id="24.1", form="left", lemma="left", upostag="VERB",
+            xpostag="VBN", feats=OrderedDict([
+                 ('Tense', 'Past'), ('VerbForm', 'Part')]),
+            head=None, deprel="_", deps="CopyOf=6", misc=None)
+    ),
 ])
-def test_parse_conllu_rawline(conllu, line, expected):
+def test_parse_line_from_token_string(conllu, line, expected):
     assert conllu._parse_line(line) == expected
+
+
+def test_parse_line_returns_token(conllu, token_string):
+    assert isinstance(conllu._parse_line(token_string), Token) is True
+
+
+def test_parse_line_with_errors_returns_exception(conllu, line_with_errors):
+    with pytest.raises(Exception) as exc:
+        conllu._parse_line(line_with_errors)
+    assert (str(exc.value) ==
+            "Invalid format, line must contain ten fields separated "
+            "by tabs.")
 
 
 @pytest.mark.parametrize("value,expected", [
@@ -252,10 +278,25 @@ def test_parse_nullable_values(conllu, value, expected):
 
 
 @pytest.mark.parametrize("value,expected", [
-    ("5-6", None), ("_", None), ("10", 10)
+    ("5-6", None), ("_", None), ("10", 10), ("24.1", None)
 ])
 def test_parse_int_value(conllu, value, expected):
     assert conllu._parse_int_value(value) == expected
+
+
+@pytest.mark.parametrize("value,expected", [
+    ("5-6", "5-6"), ("10", "10"), ("24.1", "24.1"),
+])
+def test_parse_id_value(conllu, value, expected):
+    assert conllu._parse_id_value(value) == expected
+
+
+@pytest.mark.parametrize("value", ["_", "", "NOUN"])
+def test_parse_id_raises_exception_with_wrong_values(conllu, value):
+    with pytest.raises(Exception) as exc:
+        conllu._parse_id_value(value)
+    assert (str(exc.value) ==
+            "Incorrect ID field in CoNLL-U: {}".format(value))
 
 
 @pytest.mark.parametrize("value,expected", [
@@ -274,27 +315,6 @@ def test_parse_dict_value(conllu, value, expected):
 ])
 def test_parse_paired_list_value(conllu, value, expected):
     assert conllu._parse_paired_list_value(value) == expected
-
-
-@pytest.mark.parametrize("features,expanded_features", [
-    (
-        OrderedDict([
-            ("Mood", "Ind"), ("Number", "Plur"),
-            ("Person", "3"), ("Tense", "Pres")]),
-        "Mood=Ind|Number=Plur|Person=3|Tense=Pres"
-    ),
-    (
-        None, "_"
-    ),
-    (
-        OrderedDict([
-            ("Gender", "Masc"), ("Number", "Sing")]),
-        "Gender=Masc|Number=Sing"
-    ),
-])
-def test_expand_features(conllu, features, expanded_features):
-    token = Token()
-    assert token._expand_features(features) == expanded_features
 
 
 @pytest.mark.parametrize("tag,expected", [
