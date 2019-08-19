@@ -3,9 +3,9 @@ import sys
 import re
 from copy import deepcopy
 from collections import OrderedDict
+from .HeadDep import HeadDep
 from .Sentence import Sentence
 from .Token import Token
-from .models import headdep
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',
@@ -396,11 +396,11 @@ class CoNLLU(object):
         """
         lemmas = self.get_lemmas(sentence)
         return [
-            headdep(
-                rel=token.deprel,
+            HeadDep(
                 head=lemmas[token.head - 1],
                 dep=token.lemma,
-                pos=(
+                relation=token.deprel,
+                position=(
                     token.head - 1,
                     idx
                 )
@@ -427,7 +427,7 @@ class CoNLLU(object):
         return [
             headdep_pair
             for headdep_pair in self.get_headdep_pairs(sentence)
-            if headdep_pair.rel == deprel
+            if headdep_pair.relation == deprel
         ]
 
     def _get_comments(self, comments):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 from collections import OrderedDict
-from pyconllu.models import headdep
+from pyconllu.HeadDep import HeadDep
 from pyconllu.Sentence import Sentence
 from pyconllu.Token import Token
 
@@ -728,23 +728,29 @@ def sentence_from_comments():
 @pytest.fixture
 def headdeps():
     return [
-        headdep(rel="det", head="objetivo", dep="o", pos=(1, 0)),
-        headdep(rel="case", head="hotél", dep="de", pos=(5, 2)),
-        headdep(rel="det", head="hotél", dep="o", pos=(5, 3)),
-        headdep(rel="amod", head="hotél", dep="principal", pos=(5, 4)),
-        headdep(rel="nmod", head="objetivo", dep="hotél", pos=(1, 5)),
-        headdep(rel="case", head="cidade", dep="de", pos=(8, 6)),
-        headdep(rel="det", head="cidade", dep="o", pos=(8, 7)),
-        headdep(rel="nmod", head="hotél", dep="cidade", pos=(5, 8)),
-        headdep(rel="punct", head="objetivo", dep=".", pos=(1, 9))
+        HeadDep(head="objetivo", dep="o", relation="det", position=(1, 0)),
+        HeadDep(head="hotél", dep="de", relation="case", position=(5, 2)),
+        HeadDep(head="hotél", dep="o", relation="det", position=(5, 3)),
+        HeadDep(
+            head="hotél", dep="principal", relation="amod", position=(5, 4)
+        ),
+        HeadDep(
+            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
+        ),
+        HeadDep(head="cidade", dep="de", relation="case", position=(8, 6)),
+        HeadDep(head="cidade", dep="o", relation="det", position=(8, 7)),
+        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8)),
+        HeadDep(head="objetivo", dep=".", relation="punct", position=(1, 9))
     ]
 
 
 @pytest.fixture
 def headdeps_nmod():
     return [
-        headdep(head="objetivo", dep="hotél", rel="nmod", pos=(1, 5)),
-        headdep(head="hotél", dep="cidade", rel="nmod", pos=(5, 8))
+        HeadDep(
+            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
+        ),
+        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8))
     ]
 
 
