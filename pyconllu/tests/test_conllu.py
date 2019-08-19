@@ -58,10 +58,8 @@ def test_parse_sentence_from_string(
     assert conllu.parse_sentence(conllu_string) == parsed_sentence_from_string
 
 
-def test_parse_empty_sentence(conllu, empty_sentence):
-    assert (conllu.parse_sentence(empty_sentence) ==
-            Sentence(
-                comments="", tokens=[], contractions=[], empty_nodes=[]))
+def test_parse_empty_sentence(conllu):
+    assert (conllu.parse_sentence("") == Sentence())
 
 
 def test_parse_sentence_with_errors_raises_exception(

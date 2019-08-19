@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 class Sentence(object):
-    def __init__(self, tokens, comments, contractions, empty_nodes):
+    def __init__(
+            self,
+            tokens=[],
+            comments="",
+            contractions=[],
+            empty_nodes=[]):
         self.tokens = tokens
-        self.comments = comments or ""
+        self.comments = comments
         self.contractions = contractions
         self.empty_nodes = empty_nodes
 

@@ -844,8 +844,3 @@ hotéis hotél NOUN
 @pytest.fixture
 def line_with_errors():
     return "5\tprincipais\tprincipal\tADJ\n"
-
-
-@pytest.fixture
-def empty_sentence():
-    return ""
