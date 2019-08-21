@@ -184,7 +184,7 @@ class CoNLLU(object):
         return "\n".join([
             self.generate_conllu_sentence(sentence) for sentence in sentences])
 
-    def get_lemmas(self, tokens):
+    def get_lemmas(self, sentence):
         """
         list get_lemmas(list)
 
@@ -221,7 +221,7 @@ class CoNLLU(object):
                 'el', 'unidad', 'sísmico', 'restante', 'corresponder', 'a' ...
             ]
         """
-        return [self._get_lemma(token) for token in tokens]
+        return [self._get_lemma(token) for token in sentence.tokens]
 
     def get_wordforms(self, tokens):
         """
@@ -415,7 +415,7 @@ class CoNLLU(object):
             ) for token in tokens if token.head == int(head)
         ]
 
-    def get_headdep_pairs(self, tokens):
+    def get_headdep_pairs(self, sentence):
         """
         list get_headdep_pairs(list)
 
@@ -446,7 +446,7 @@ class CoNLLU(object):
                 headdep(rel='punct', head='corresponder', dep='.', pos=(4, 12))
             ]
         """
-        lemmas = self.get_lemmas(tokens)
+        lemmas = self.get_lemmas(sentence)
         return [
             HeadDep(
                 head=lemmas[token.head - 1],
@@ -457,7 +457,7 @@ class CoNLLU(object):
                     idx
                 )
             )
-            for idx, token in enumerate(tokens) if token.head > 0
+            for idx, token in enumerate(sentence.tokens) if token.head > 0
         ]
 
     def get_headdep_pairs_in_deprel(self, deprel, tokens):

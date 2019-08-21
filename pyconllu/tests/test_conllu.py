@@ -138,7 +138,7 @@ def test_get_lemmas_from_sentence(conllu, parsed_sentence_from_string):
         "."
     ]
 
-    assert conllu.get_lemmas(parsed_sentence_from_string.tokens) == lemmas
+    assert conllu.get_lemmas(parsed_sentence_from_string) == lemmas
 
 
 def test_get_wordforms_from_sentence(conllu, parsed_sentence_from_string):
@@ -221,7 +221,7 @@ def test_get_head_deps_from_sentence(conllu, parsed_sentence_from_string):
         HeadDep(head="objetivo", dep=".", relation="punct", position=(1, 9))
     ]
 
-    assert (conllu.get_headdep_pairs(parsed_sentence_from_string.tokens) ==
+    assert (conllu.get_headdep_pairs(parsed_sentence_from_string) ==
             headdeps)
 
 
@@ -234,7 +234,7 @@ def test_get_head_deps_in_deprel(conllu, parsed_sentence_from_string):
     ]
 
     assert (conllu.get_headdep_pairs_in_deprel(
-        "nmod", parsed_sentence_from_string.tokens) == headdeps_nmod)
+        "nmod", parsed_sentence_from_string) == headdeps_nmod)
 
 
 def test_get_heads_from_sentence(conllu, parsed_sentence_from_string, heads):
