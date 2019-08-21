@@ -280,8 +280,8 @@ def test_conllu_line_contains_empty_node(conllu, line, expected):
     (
         "3-4\tdos\t_\t_\t_\t_\t_\t_\t_\t_",
         Token(
-            id="3-4", form="dos", lemma="_", upostag="_", xpostag=None,
-            feats=None, head=None, deprel="_", deps=None, misc=None)
+            id="3-4", form="dos", lemma=None, upostag=None, xpostag=None,
+            feats=None, head=None, deprel=None, deps=None, misc=None)
     ),
     (
         "24.1\tleft\tleft\tVERB\tVBN\tTense=Past|VerbForm=Part\t_\t_\tCopyOf=6\t_",  # noqa

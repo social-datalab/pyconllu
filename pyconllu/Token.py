@@ -64,7 +64,7 @@ class Token(object):
             ('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}').format(
                 self.id,
                 self.form,
-                self.lemma,
+                self._expand_token(self.lemma),
                 self._expand_token(self.upostag),
                 self._expand_token(self.xpostag),
                 self._expand_features(self.feats),

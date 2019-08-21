@@ -227,14 +227,14 @@ def parsed_sentence_from_string():
         ],
         contractions=[
             (
-                Token(id="3-4", form="dos", lemma="_", upostag="_",
-                      xpostag=None, feats=None, head=None, deprel="_",
+                Token(id="3-4", form="dos", lemma=None, upostag=None,
+                      xpostag=None, feats=None, head=None, deprel=None,
                       deps=None, misc=None),
                 2
             ),
             (
-                Token(id="7-8", form="da", lemma="_", upostag="_",
-                      xpostag=None, feats=None, head=None, deprel="_",
+                Token(id="7-8", form="da", lemma=None, upostag=None,
+                      xpostag=None, feats=None, head=None, deprel=None,
                       deps=None, misc=None),
                 6
             )
@@ -547,8 +547,8 @@ def parsed_sentences():
             contractions=[
                 (
                     Token(
-                        id="18-19", form="del", lemma="_", upostag="_",
-                        xpostag=None, feats=None, head=None, deprel="_",
+                        id="18-19", form="del", lemma=None, upostag=None,
+                        xpostag=None, feats=None, head=None, deprel=None,
                         deps=None, misc=None),
                     17
                 )

@@ -17,8 +17,8 @@ TOKEN_SEP_PATTERN = r"\t"
 MULTI_DEPS_PATTERN = re.compile(
     r"^{}(\|{})*$".format(DEPS_PATTERN, DEPS_PATTERN))
 PNAME_PATTERN = r"(NP|PROPN|PNOUN|NNP)"
-CONTRACT_ID_PATTERN = r"^[0-9]+\-[0-9]+$"
-EMPTY_NODE_ID_PATTERN = r"^[0-9]+\.[0-9]+$"
+CONTRACT_ID_PATTERN = r"^[0-9]+\-[0-9]+"
+EMPTY_NODE_ID_PATTERN = r"^[0-9]+\.[0-9]+"
 
 
 class CoNLLU(object):
@@ -577,6 +577,9 @@ class CoNLLU(object):
                 "Invalid format, line must contain ten fields separated "
                 "by tabs."
                 )
+
+        if(self._is_contraction(line[0])):
+            return(Token(id=line[0], form=line[1]))
 
         data = Token()
 
