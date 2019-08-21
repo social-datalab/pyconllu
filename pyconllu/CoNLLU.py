@@ -5,7 +5,7 @@ from copy import deepcopy
 from collections import OrderedDict
 from .HeadDep import HeadDep
 from .Sentence import Sentence
-from .Token import Token
+from .Token import Token, Head
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',
@@ -116,8 +116,48 @@ class CoNLLU(object):
         Output:
             ToDo
         """
-        for raw_sentence in self._read_sentences_from_file(ifile):
+        for raw_sentence in self.read_sentences_from_file(ifile):
             yield self.parse_sentence(raw_sentence)
+
+    def read_sentences_from_file(self, ifile):
+        """
+        (generator)str read_sentences_from_file(str)
+
+        It reads a CoNLLU corpus from file and returns a generator which
+        produces a string containing a raw sentence on each iteration.
+
+        Input:
+            ifile = "corpus.conllu"
+
+        Output:
+            "# sent_id = 1
+            # text = Las unidades sísmicas (...)
+            1   Las el  DET DA0FP0  (...)
+            2   unidades    unidad  NOUN    NCFP000 (...)
+            3   sísmicas    sísmico ADJ AQ0FP0  (...)
+            (...)"
+        """
+        raw_sentence = ""
+        try:
+            with open(ifile) as f:
+                for line in f:
+                    line = line.strip(" ")
+                    if line == "\n":
+                        if raw_sentence is "":
+                            continue
+                        yield raw_sentence
+                        raw_sentence = ""
+                        continue
+
+                    if line:
+                        raw_sentence += line
+
+            # yield remaining contents if file does not end in '\n\n'
+            if raw_sentence:
+                yield raw_sentence
+        except IOError:
+            print("Unable to read file: " + ifile)
+            sys.exit()
 
     def generate_conllu_sentence(self, sentence):
         """
@@ -144,7 +184,7 @@ class CoNLLU(object):
         return "\n".join([
             self.generate_conllu_sentence(sentence) for sentence in sentences])
 
-    def get_lemmas(self, sentence):
+    def get_lemmas(self, tokens):
         """
         list get_lemmas(list)
 
@@ -181,9 +221,9 @@ class CoNLLU(object):
                 'el', 'unidad', 'sísmico', 'restante', 'corresponder', 'a' ...
             ]
         """
-        return [self._get_lemma(token) for token in sentence.tokens]
+        return [self._get_lemma(token) for token in tokens]
 
-    def get_wordforms(self, sentence):
+    def get_wordforms(self, tokens):
         """
         list get_wordforms(list)
 
@@ -197,7 +237,7 @@ class CoNLLU(object):
                 'Las', 'unidades', 'sísmicas', 'restantes', 'corresponden' ...
             ]
         """
-        return [token.form for token in sentence.tokens]
+        return [token.form for token in tokens]
 
     def get_sentence_text(self, sentence):
         """
@@ -211,9 +251,9 @@ class CoNLLU(object):
         except:
             pass
 
-        return " ".join(self.get_wordforms(sentence))
+        return " ".join(self.get_wordforms(sentence.tokens))
 
-    def get_root(self, sentence):
+    def get_root(self, tokens):
         """
         dict get_root(list)
 
@@ -243,11 +283,11 @@ class CoNLLU(object):
                 ('misc', None)
             ])
         """
-        for token in sentence.tokens:
+        for token in tokens:
             if token.head == 0:
                 return token
 
-    def get_heads(self, sentence):
+    def get_heads(self, tokens):
         """
         list get_heads(list)
 
@@ -303,18 +343,25 @@ class CoNLLU(object):
             ]
         """
         return [
-            {
-                "id": sentence.tokens[t - 1].id,
-                "lemma": sentence.tokens[t - 1].lemma,
-                "tag": sentence.tokens[t - 1].upostag,
-                "deps": self.get_deps_from_head(int(
-                    sentence.tokens[t - 1].id), sentence)
-            } for t in set([
-                token.head for token in sentence.tokens
+            Head(
+                id=tokens[t - 1].id,
+                form=tokens[t - 1].form,
+                lemma=tokens[t - 1].lemma,
+                upostag=tokens[t - 1].upostag,
+                xpostag=tokens[t - 1].xpostag,
+                feats=tokens[t - 1].feats,
+                head=tokens[t - 1].head,
+                deprel=tokens[t - 1].deprel,
+                deps=tokens[t - 1].deps,
+                misc=tokens[t - 1].misc,
+                dependents=self.get_deps_from_head(
+                    int(tokens[t - 1].id), tokens)
+            ) for t in set([
+                token.head for token in tokens
             ]).difference([0])
         ]
 
-    def get_deps_from_head(self, head, sentence):
+    def get_deps_from_head(self, head, tokens):
         """
         list get_deps_from_head(int, list)
 
@@ -354,16 +401,21 @@ class CoNLLU(object):
             ]
         """
         return [
-            {
-                "lemma": token.lemma,
-                "form": token.form,
-                "tag": token.upostag,
-                "pos": token.xpostag,
-                "deprel": token.deprel
-            } for token in sentence.tokens if token.head == int(head)
+            Token(
+                id=token.id,
+                form=token.form,
+                lemma=token.lemma,
+                upostag=token.upostag,
+                xpostag=token.xpostag,
+                feats=token.feats,
+                head=token.head,
+                deprel=token.deprel,
+                deps=token.deps,
+                misc=token.misc,
+            ) for token in tokens if token.head == int(head)
         ]
 
-    def get_headdep_pairs(self, sentence):
+    def get_headdep_pairs(self, tokens):
         """
         list get_headdep_pairs(list)
 
@@ -394,7 +446,7 @@ class CoNLLU(object):
                 headdep(rel='punct', head='corresponder', dep='.', pos=(4, 12))
             ]
         """
-        lemmas = self.get_lemmas(sentence)
+        lemmas = self.get_lemmas(tokens)
         return [
             HeadDep(
                 head=lemmas[token.head - 1],
@@ -405,10 +457,10 @@ class CoNLLU(object):
                     idx
                 )
             )
-            for idx, token in enumerate(sentence.tokens) if token.head > 0
+            for idx, token in enumerate(tokens) if token.head > 0
         ]
 
-    def get_headdep_pairs_in_deprel(self, deprel, sentence):
+    def get_headdep_pairs_in_deprel(self, deprel, tokens):
         """
         list get_headdep_pairs_in_deprel(str, list)
 
@@ -426,7 +478,7 @@ class CoNLLU(object):
         """
         return [
             headdep_pair
-            for headdep_pair in self.get_headdep_pairs(sentence)
+            for headdep_pair in self.get_headdep_pairs(tokens)
             if headdep_pair.relation == deprel
         ]
 
@@ -439,46 +491,6 @@ class CoNLLU(object):
 
     def _convert_tokens_to_conllu(self, tokens):
         return "".join([str(token) + "\n" for token in tokens])
-
-    def _read_sentences_from_file(self, ifile):
-        """
-        (generator)str _read_sentences_from_file(str)
-
-        It reads a CoNLLU corpus from file and returns a generator which
-        produces a string containing a raw sentence on each iteration.
-
-        Input:
-            ifile = "corpus.conllu"
-
-        Output:
-            "# sent_id = 1
-            # text = Las unidades sísmicas (...)
-            1   Las el  DET DA0FP0  (...)
-            2   unidades    unidad  NOUN    NCFP000 (...)
-            3   sísmicas    sísmico ADJ AQ0FP0  (...)
-            (...)"
-        """
-        raw_sentence = ""
-        try:
-            with open(ifile) as f:
-                for line in f:
-                    line = line.strip(" ")
-                    if line == "\n":
-                        if raw_sentence is "":
-                            continue
-                        yield raw_sentence
-                        raw_sentence = ""
-                        continue
-
-                    if line:
-                        raw_sentence += line
-
-            # yield remaining contents if file does not end in '\n\n'
-            if raw_sentence:
-                yield raw_sentence
-        except IOError:
-            print("Unable to read file: " + ifile)
-            sys.exit()
 
     def _is_propername(self, tag):
         """

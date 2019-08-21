@@ -6,6 +6,7 @@ from collections import OrderedDict
 from pyconllu import CoNLLU
 from pyconllu.Sentence import Sentence
 from pyconllu.Token import Token
+from pyconllu.HeadDep import HeadDep
 
 
 @pytest.fixture(scope="session")
@@ -26,7 +27,7 @@ def conllu_filename(tmpdir):
 
 
 @pytest.fixture()
-def sentences_parsed_from_file(conllu, conllu_filename, conllu_file_contents):
+def parse_file_with_sentences(conllu, conllu_filename, conllu_file_contents):
     filename = conllu_filename(conllu_file_contents)
     return conllu.parse_file(filename)
 
@@ -34,7 +35,7 @@ def sentences_parsed_from_file(conllu, conllu_filename, conllu_file_contents):
 def test_read_conllu_from_file(conllu, conllu_filename, conllu_file_contents):
     filename = conllu_filename(conllu_file_contents)
     sentences = [
-        sentence for sentence in conllu._read_sentences_from_file(
+        sentence for sentence in conllu.read_sentences_from_file(
             filename)]
     assert "\n".join(sentences) == conllu_file_contents
     assert len(sentences) == 3
@@ -44,7 +45,7 @@ def test_read_conllu_from_file_with_multiple_separators(
         conllu, conllu_filename, conllu_multiple_strings):
     filename = conllu_filename(conllu_multiple_strings)
     sentences = [
-        sentence for sentence in conllu._read_sentences_from_file(
+        sentence for sentence in conllu.read_sentences_from_file(
             filename)]
     assert len(sentences) == 3
 
@@ -58,14 +59,22 @@ def test_parse_sentence_from_string(
     assert conllu.parse_sentence(conllu_string) == parsed_sentence_from_string
 
 
+def test_parse_sentence_from_file(
+        parse_file_with_sentences, parsed_sentences):
+    sentences = [sentence for sentence in parse_file_with_sentences]
+
+    assert sentences == parsed_sentences
+
+
 def test_parse_empty_sentence(conllu):
     assert (conllu.parse_sentence("") == Sentence())
 
 
-def test_parse_sentence_with_errors_raises_exception(
-        conllu, sentence_with_errors):
+def test_parse_sentence_with_errors_raises_exception(conllu):
+    sentence = "O o DET\nobjetivo objetivo NOUN\nde de ADP\no o DET\n"\
+               "principais principal ADJ\nhotéis hotél NOUN"
     with pytest.raises(Exception) as exc:
-        conllu.parse_sentence(sentence_with_errors)
+        conllu.parse_sentence(sentence)
     assert (str(exc.value) ==
             "Invalid format, line must contain ten fields separated "
             "by tabs.")
@@ -79,25 +88,21 @@ def test_parse_sentence_with_empty_node(
             parsed_sentence_with_empty_node)
 
 
-def test_parse_last_sentence_from_file(
-        sentences_parsed_from_file, parsed_sentence_from_file):
-    while True:
-        try:
-            sentence = next(sentences_parsed_from_file)
-        except StopIteration:
-            break
-
-    assert sentence == parsed_sentence_from_file[-1]
+def test_parse_file_returns_iterator(parse_file_with_sentences):
+    assert isinstance(parse_file_with_sentences, GeneratorType)
 
 
-def test_parse_file_returns_iterator(sentences_parsed_from_file):
-    assert isinstance(sentences_parsed_from_file, GeneratorType)
-
-
-def test_parse_file_output_contains_sentences(sentences_parsed_from_file):
-    for sentence in sentences_parsed_from_file:
+def test_parse_file_output_contains_sentences(parse_file_with_sentences):
+    for sentence in parse_file_with_sentences:
         assert (isinstance(sentence, Sentence) and
                 all(isinstance(s, Token) for s in sentence.tokens))
+
+
+def test_generate_conllu_returns_string(
+        conllu, parsed_sentence_from_string, conllu_string):
+    assert (isinstance(
+        conllu.generate_conllu_sentence(parsed_sentence_from_string), str
+    ))
 
 
 def test_generate_conllu_from_sentence(
@@ -114,8 +119,8 @@ def test_generate_conllu_with_empty_node(
 
 
 def test_generate_conllu_from_file(
-        conllu, sentences_parsed_from_file, conllu_file_contents):
-    assert (conllu.generate_conllu_file(sentences_parsed_from_file) ==
+        conllu, parsed_sentences, conllu_file_contents):
+    assert (conllu.generate_conllu_file(parsed_sentences) ==
             conllu_file_contents)
 
 
@@ -127,14 +132,22 @@ def test_convert_tokens_to_conllu_line(
         parsed_sentence_from_string.tokens[2:6]) == expected
 
 
-def test_get_lemmas_from_sentence(
-        conllu, parsed_sentence_from_string, lemmas):
-    assert conllu.get_lemmas(parsed_sentence_from_string) == lemmas
+def test_get_lemmas_from_sentence(conllu, parsed_sentence_from_string):
+    lemmas = [
+        "o", "objetivo", "de", "o", "principal", "hotél", "de", "o", "cidade",
+        "."
+    ]
+
+    assert conllu.get_lemmas(parsed_sentence_from_string.tokens) == lemmas
 
 
-def test_get_wordforms_from_sentence(
-        conllu, parsed_sentence_from_string, wordforms):
-    assert (conllu.get_wordforms(parsed_sentence_from_string) ==
+def test_get_wordforms_from_sentence(conllu, parsed_sentence_from_string):
+    wordforms = [
+        "O", "objetivo", "de", "os", "principais", "hotéis", "de", "a",
+        "cidade", "."
+    ]
+
+    assert (conllu.get_wordforms(parsed_sentence_from_string.tokens) ==
             wordforms)
 
 
@@ -161,52 +174,79 @@ enfermedad coronaria.
     )
 ])
 def test_get_comments_from_parsed_file(
-        conllu, parsed_sentence_from_file, idx, expected):
+        conllu, parsed_sentences, idx, expected):
     assert conllu._get_comments(
-        parsed_sentence_from_file[idx].comments) == expected
+        parsed_sentences[idx].comments) == expected
 
 
-def test_get_root_from_sentence(conllu, parsed_sentence_from_string, root):
-    assert conllu.get_root(parsed_sentence_from_string) == root
+def test_get_root_from_sentence(conllu, parsed_sentence_from_string):
+    root = Token(
+        id="2", form="objetivo", lemma="objetivo", upostag="NOUN",
+        xpostag="NOUN", feats=OrderedDict([
+            ("Gender", "Masc"), ("Number", "Sing")]),
+        head=0, deprel="root", deps=None, misc=None)
+
+    assert conllu.get_root(parsed_sentence_from_string.tokens) == root
 
 
-def test_get_sentence_text_from_wordforms(
-        conllu,
-        parsed_sentence_from_string,
-        sentence_from_wordforms):
+def test_get_sentence_text_from_wordforms(conllu, parsed_sentence_from_string):
+    raw_sentence = "O objetivo de os principais hotéis de a cidade ."
+
     assert (conllu.get_sentence_text(parsed_sentence_from_string) ==
-            sentence_from_wordforms)
+            raw_sentence)
 
 
-def test_get_sentence_text_from_comments(
-        conllu,
-        parsed_sentence_from_file,
-        sentence_from_comments):
-    assert (conllu.get_sentence_text(parsed_sentence_from_file[0]) ==
-            sentence_from_comments)
+def test_get_sentence_text_from_comments(conllu, parsed_sentences):
+    raw_sentence = "El objetivo de este trabajo ha sido conocer si los "\
+                   "valores de homocisteína influyen en la evolución del "\
+                   "GIM carotídeo en pacientes con enfermedad coronaria."
+
+    assert (conllu.get_sentence_text(parsed_sentences[0]) == raw_sentence)
 
 
-def test_get_head_deps_from_sentence(
-        conllu, parsed_sentence_from_string, headdeps):
-    assert (conllu.get_headdep_pairs(parsed_sentence_from_string) ==
+def test_get_head_deps_from_sentence(conllu, parsed_sentence_from_string):
+    headdeps = [
+        HeadDep(head="objetivo", dep="o", relation="det", position=(1, 0)),
+        HeadDep(head="hotél", dep="de", relation="case", position=(5, 2)),
+        HeadDep(head="hotél", dep="o", relation="det", position=(5, 3)),
+        HeadDep(
+            head="hotél", dep="principal", relation="amod", position=(5, 4)
+        ),
+        HeadDep(
+            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
+        ),
+        HeadDep(head="cidade", dep="de", relation="case", position=(8, 6)),
+        HeadDep(head="cidade", dep="o", relation="det", position=(8, 7)),
+        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8)),
+        HeadDep(head="objetivo", dep=".", relation="punct", position=(1, 9))
+    ]
+
+    assert (conllu.get_headdep_pairs(parsed_sentence_from_string.tokens) ==
             headdeps)
 
 
-def test_get_head_deps_in_deprel(
-        conllu, parsed_sentence_from_string, headdeps_nmod):
+def test_get_head_deps_in_deprel(conllu, parsed_sentence_from_string):
+    headdeps_nmod = [
+        HeadDep(
+            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
+        ),
+        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8))
+    ]
+
     assert (conllu.get_headdep_pairs_in_deprel(
-        "nmod", parsed_sentence_from_string) == headdeps_nmod)
+        "nmod", parsed_sentence_from_string.tokens) == headdeps_nmod)
 
 
 def test_get_heads_from_sentence(conllu, parsed_sentence_from_string, heads):
-    assert conllu.get_heads(parsed_sentence_from_string) == heads
+    assert conllu.get_heads(parsed_sentence_from_string.tokens) == heads
 
 
-def test_get_deps_from_head(conllu, parsed_sentence_from_string, deps):
-    head = conllu.get_heads(parsed_sentence_from_string)[2]
-    assert (
-        conllu.get_deps_from_head(
-            head["id"], parsed_sentence_from_string) == deps)
+def test_get_deps_from_head(conllu, parsed_sentence_from_string, heads):
+    head = heads[2].id
+    tokens = parsed_sentence_from_string.tokens
+    deps = heads[2].dependents
+
+    assert (conllu.get_deps_from_head(head, tokens) == deps)
 
 
 @pytest.mark.parametrize("line,expected", [
@@ -256,13 +296,16 @@ def test_parse_line_from_token_string(conllu, line, expected):
     assert conllu._parse_line(line) == expected
 
 
-def test_parse_line_returns_token(conllu, token_string):
-    assert isinstance(conllu._parse_line(token_string), Token) is True
+def test_parse_line_returns_token(conllu, conllu_string):
+    raw_token = conllu_string.partition('\n')[0]
+
+    assert isinstance(conllu._parse_line(raw_token), Token) is True
 
 
-def test_parse_line_with_errors_returns_exception(conllu, line_with_errors):
+def test_parse_line_with_errors_returns_exception(conllu):
+    line = "5\tprincipais\tprincipal\tADJ\n"
     with pytest.raises(Exception) as exc:
-        conllu._parse_line(line_with_errors)
+        conllu._parse_line(line)
     assert (str(exc.value) ==
             "Invalid format, line must contain ten fields separated "
             "by tabs.")

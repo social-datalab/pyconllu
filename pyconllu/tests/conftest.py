@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 from collections import OrderedDict
-from pyconllu.HeadDep import HeadDep
 from pyconllu.Sentence import Sentence
-from pyconllu.Token import Token
+from pyconllu.Token import Token, Head
 
 
 @pytest.fixture
@@ -181,21 +180,6 @@ def conllu_string_with_empty_node():
 26	good	good	ADJ	JJ	Degree=Pos	24	orphan	SpaceAfter=No|CheckReln=nmod	_
 27	.	.	PUNCT	.	_	6	punct	_	_
 """  # noqa
-
-
-@pytest.fixture()
-def token_string():
-    return ("12	defensivo	defensivo	ADJ	ADJ	"
-            "Gender=Masc|Number=Sing	11	amod	SpaceAfter=No	_")
-
-
-@pytest.fixture()
-def parsed_token_from_string():
-    return Token(
-        id="12", form="defensivo", lemma="defensivo", upostag="ADJ",
-        xpostag="ADJ", feats=OrderedDict([
-            ('Gender', 'Masc'), ('Number', 'Sing')]),
-        head=11, deprel="amod", deps="SpaceAfter=No", misc=None)
 
 
 @pytest.fixture
@@ -409,7 +393,7 @@ def parsed_sentence_with_empty_node():
 
 
 @pytest.fixture
-def parsed_sentence_from_file():
+def parsed_sentences():
     return [
         Sentence
         (
@@ -511,10 +495,6 @@ def parsed_sentence_from_file():
                         ("Gender", "Fem"), ("Number", "Sing")]),
                     head=14, deprel="obl", deps=None, misc=None),
                 Token(
-                    id="17-18", form="del", lemma="_", upostag="_",
-                    xpostag=None, feats=None, head=None, deprel="_",
-                    deps=None, misc=None),
-                Token(
                     id="18", form="de", lemma="de", upostag="ADP",
                     xpostag="SP", feats=OrderedDict([
                         ("AdpType", "Prep")]),
@@ -567,10 +547,10 @@ def parsed_sentence_from_file():
             contractions=[
                 (
                     Token(
-                        id="17-18", form="del", lemma="_", upostag="_",
+                        id="18-19", form="del", lemma="_", upostag="_",
                         xpostag=None, feats=None, head=None, deprel="_",
                         deps=None, misc=None),
-                    16
+                    17
                 )
             ],
             empty_nodes=[]
@@ -687,160 +667,63 @@ def parsed_sentence_from_file():
 
 
 @pytest.fixture
-def lemmas():
-    return [
-        "o", "objetivo", "de", "o", "principal", "hotél", "de", "o",
-        "cidade", "."
-    ]
-
-
-@pytest.fixture
-def wordforms():
-    return [
-        "O", "objetivo", "de", "os", "principais", "hotéis", "de", "a",
-        "cidade", "."
-    ]
-
-
-@pytest.fixture
-def root():
-    return Token(
-        id="2", form="objetivo", lemma="objetivo", upostag="NOUN",
-        xpostag="NOUN", feats=OrderedDict([
-            ("Gender", "Masc"), ("Number", "Sing")]),
-        head=0, deprel="root", deps=None, misc=None)
-
-
-@pytest.fixture
-def sentence_from_wordforms():
-    return "O objetivo de os principais hotéis de a cidade ."
-
-
-@pytest.fixture
-def sentence_from_comments():
-    return (
-        "El objetivo de este trabajo ha sido conocer si los valores de "
-        "homocisteína influyen en la evolución del GIM carotídeo en pacientes "
-        "con enfermedad coronaria."
-    )
-
-
-@pytest.fixture
-def headdeps():
-    return [
-        HeadDep(head="objetivo", dep="o", relation="det", position=(1, 0)),
-        HeadDep(head="hotél", dep="de", relation="case", position=(5, 2)),
-        HeadDep(head="hotél", dep="o", relation="det", position=(5, 3)),
-        HeadDep(
-            head="hotél", dep="principal", relation="amod", position=(5, 4)
-        ),
-        HeadDep(
-            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
-        ),
-        HeadDep(head="cidade", dep="de", relation="case", position=(8, 6)),
-        HeadDep(head="cidade", dep="o", relation="det", position=(8, 7)),
-        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8)),
-        HeadDep(head="objetivo", dep=".", relation="punct", position=(1, 9))
-    ]
-
-
-@pytest.fixture
-def headdeps_nmod():
-    return [
-        HeadDep(
-            head="objetivo", dep="hotél", relation="nmod", position=(1, 5)
-        ),
-        HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8))
-    ]
-
-
-@pytest.fixture
 def heads():
     return [
-        {
-            "id": "9", "tag": "NOUN", "lemma": "cidade", "deps": [
-                {
-                    "pos": "ADP", "form": "de", "tag": "ADP",
-                    "lemma": "de", "deprel": "case"
-                },
-                {
-                    "pos": "DET", "form": "a", "tag": "DET",
-                    "lemma": "o", "deprel": "det"
-                }
+        Head(
+            id="9", form="cidade", lemma="cidade", upostag="NOUN",
+            xpostag="NOUN", feats=OrderedDict([
+                ("Gender", "Fem"), ("Number", "Sing")]),
+            head=6, deprel="nmod", deps=None, misc=None, dependents=[
+                Token(id="7", form="de", lemma="de", upostag="ADP",
+                      xpostag="ADP", feats=None, head=9, deprel="case",
+                      deps=None, misc=None),
+                Token(id="8", form="a", lemma="o", upostag="DET",
+                      xpostag="DET", feats=OrderedDict([
+                        ("Definite", "Def"), ("Gender", "Fem"),
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                      head=9, deprel="det", deps=None, misc=None),
             ]
-        },
-        {
-            "id": "2", "tag": "NOUN", "lemma": "objetivo", "deps": [
-                {
-                    "pos": "DET", "form": "O", "tag": "DET",
-                    "lemma": "o", "deprel": "det"
-                },
-                {
-                    "pos": "NOUN", "form": "hotéis", "tag": "NOUN",
-                    "lemma": "hotél", "deprel": "nmod"
-                },
-                {
-                    "pos": ".", "form": ".", "tag": "PUNCT",
-                    "lemma": ".", "deprel": "punct"
-                }
+        ),
+        Head(
+            id="2", form="objetivo", lemma="objetivo", upostag="NOUN",
+            xpostag="NOUN", feats=OrderedDict([
+                ("Gender", "Masc"), ("Number", "Sing")]),
+            head=0, deprel="root", deps=None, misc=None, dependents=[
+                Token(id="1", form="O", lemma="o", upostag="DET",
+                      xpostag="DET", feats=OrderedDict([
+                        ("Definite", "Def"), ("Gender", "Masc"),
+                        ("Number", "Sing"), ("PronType", "Art")]),
+                      head=2, deprel="det", deps=None, misc=None),
+                Token(id="6", form="hotéis", lemma="hotél", upostag="NOUN",
+                      xpostag="NOUN", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Plur")]),
+                      head=2, deprel="nmod", deps=None, misc=None),
+                Token(id="10", form=".", lemma=".", upostag="PUNCT",
+                      xpostag=".", feats=None, head=2, deprel="punct",
+                      deps=None, misc=None),
             ]
-        },
-        {
-            "id": "6", "tag": "NOUN", "lemma": "hotél", "deps": [
-                {
-                    "pos": "ADP", "form": "de", "tag": "ADP",
-                    "lemma": "de", "deprel": "case"
-                },
-                {
-                    "pos": "DET", "form": "os", "tag": "DET",
-                    "lemma": "o", "deprel": "det"
-                },
-                {
-                    "pos": "ADJ", "form": "principais", "tag": "ADJ",
-                    "lemma": "principal", "deprel": "amod"
-                },
-                {
-                    "pos": "NOUN", "form": "cidade", "tag": "NOUN",
-                    "lemma": "cidade", "deprel": "nmod"
-                }
+        ),
+        Head(
+            id="6", form="hotéis", lemma="hotél", upostag="NOUN",
+            xpostag="NOUN", feats=OrderedDict([
+                ("Gender", "Masc"), ("Number", "Plur")]),
+            head=2, deprel="nmod", deps=None, misc=None, dependents=[
+                Token(id="3", form="de", lemma="de", upostag="ADP",
+                      xpostag="ADP", feats=None, head=6, deprel="case",
+                      deps=None, misc=None),
+                Token(id="4", form="os", lemma="o", upostag="DET",
+                      xpostag="DET", feats=OrderedDict([
+                        ("Definite", "Def"), ("Gender", "Masc"),
+                        ("Number", "Plur"), ("PronType", "Art")]),
+                      head=6, deprel="det", deps=None, misc=None),
+                Token(id="5", form="principais", lemma="principal",
+                      upostag="ADJ", xpostag="ADJ", feats=OrderedDict([
+                        ("Gender", "Masc"), ("Number", "Plur")]),
+                      head=6, deprel="amod", deps=None, misc=None),
+                Token(id="9", form="cidade", lemma="cidade", upostag="NOUN",
+                      xpostag="NOUN", feats=OrderedDict([
+                        ("Gender", "Fem"), ("Number", "Sing")]),
+                      head=6, deprel="nmod", deps=None, misc=None),
             ]
-        }
+        ),
     ]
-
-
-@pytest.fixture
-def deps():
-    return [
-        {
-            "tag": "ADP", "form": "de", "deprel": "case",
-            "lemma": "de", "pos": "ADP"
-        },
-        {
-            "tag": "DET", "form": "os", "deprel": "det",
-            "lemma": "o", "pos": "DET"
-        },
-        {
-            "tag": "ADJ", "form": "principais", "deprel": "amod",
-            "lemma": "principal", "pos": "ADJ"
-        },
-        {
-            "tag": "NOUN", "form": "cidade", "deprel": "nmod",
-            "lemma": "cidade", "pos": "NOUN"
-        }
-    ]
-
-
-@pytest.fixture
-def sentence_with_errors():
-    return """O o DET
-objetivo objetivo NOUN
-de de ADP
-o o DET
-principais principal ADJ
-hotéis hotél NOUN
-"""
-
-
-@pytest.fixture
-def line_with_errors():
-    return "5\tprincipais\tprincipal\tADJ\n"
