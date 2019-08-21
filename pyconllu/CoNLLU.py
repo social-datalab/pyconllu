@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import sys
 import re
-from copy import deepcopy
+import sys
 from collections import OrderedDict
+from copy import deepcopy
 from .HeadDep import HeadDep
 from .Sentence import Sentence
-from .Token import Token, Head
+from .Token import Head, Token
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',

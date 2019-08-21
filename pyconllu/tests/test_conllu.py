@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-import pytest
-from types import GeneratorType
 from collections import OrderedDict
+from types import GeneratorType
+import pytest
 from pyconllu import CoNLLU
-from pyconllu.Sentence import Sentence
-from pyconllu.Token import Token
 from pyconllu.HeadDep import HeadDep
+from pyconllu.Token import Token
+from pyconllu.Sentence import Sentence
 
 
 @pytest.fixture(scope="session")

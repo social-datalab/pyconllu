@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import pytest
 from collections import OrderedDict
+import pytest
 from pyconllu.Sentence import Sentence
-from pyconllu.Token import Token, Head
+from pyconllu.Token import Head, Token
 
 
 @pytest.fixture
