@@ -3,9 +3,24 @@ from collections import OrderedDict
 
 
 class Token(object):
+    """A class that represents a Token in a CoNLL-U sentence."""
     def __init__(
             self, id=None, form=None, lemma=None, upostag=None, xpostag=None,
             feats=None, head=None, deprel=None, deps=None, misc=None):
+        """
+        Constructor of Token.
+
+        :param id: word index in a sentence
+        :param form: wordform
+        :param lemma: lemma
+        :param upostag: universal part-of-speech tag
+        :param xpostag: language specific part-of-speech tag
+        :param feats: morphological features
+        :param head: head of the word
+        :param deprel: universal dependency relation to the head
+        :param deps: enhanced dependency graph in the form
+        :param misc: any other annotation
+        """
         self.id = id
         self.form = form
         self.lemma = lemma
@@ -60,19 +75,17 @@ class Token(object):
         )
 
     def __str__(self):
-        return (
-            ('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}').format(
-                self.id,
-                self.form,
-                self._expand_token(self.lemma),
-                self._expand_token(self.upostag),
-                self._expand_token(self.xpostag),
-                self._expand_features(self.feats),
-                self._expand_token(self.head),
-                self._expand_token(self.deprel),
-                self._expand_token(self.deps),
-                self._expand_token(self.misc)
-            )
+        return '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
+            self.id,
+            self.form,
+            self._expand_token(self.lemma),
+            self._expand_token(self.upostag),
+            self._expand_token(self.xpostag),
+            self._expand_features(self.feats),
+            self._expand_token(self.head),
+            self._expand_token(self.deprel),
+            self._expand_token(self.deps),
+            self._expand_token(self.misc)
         )
 
     @property
@@ -170,6 +183,7 @@ class Token(object):
 
 
 class Head(Token):
+    """A class that represents a Head in a CoNLL-U sentence."""
     def __init__(self, dependents=[], **kwargs):
         self.dependents = dependents
         super(Head, self).__init__(**kwargs)

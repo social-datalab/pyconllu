@@ -37,14 +37,12 @@ class HeadDep(object):
         )
 
     def __str__(self):
-        return (
-            ('{},{},{},{},{}').format(
-                self.head,
-                self.dep,
-                self.relation,
-                self.position[0],
-                self.position[1]
-            )
+        return '{},{},{},{},{}'.format(
+            self.head,
+            self.dep,
+            self.relation,
+            self.position[0],
+            self.position[1]
         )
 
     @property

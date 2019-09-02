@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
+
+
 class Sentence(object):
+    """A class that represents a CoNLL-U sentence."""
     def __init__(
             self,
             tokens=[],
             comments="",
             contractions=[],
             empty_nodes=[]):
+        """
+        Constructor of Sentence.
+        :param tokens: tokens in a sentence
+        :type tokens: list
+        :param comments: comments in a sentence
+        :type comments: str
+        :param contractions: tokens that are contractions
+        :type contractions: list
+        :param empty_nodes: tokens that are empty nodes
+        :type empty_nodes: list
+        """
         self.tokens = tokens
         self.comments = comments
         self.contractions = contractions

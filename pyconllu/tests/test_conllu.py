@@ -3,7 +3,7 @@ import os
 from collections import OrderedDict
 from types import GeneratorType
 import pytest
-from pyconllu import CoNLLU
+from pyconllu.CoNLLU import CoNLLU
 from pyconllu.HeadDep import HeadDep
 from pyconllu.Token import Token
 from pyconllu.Sentence import Sentence
@@ -147,7 +147,7 @@ def test_get_wordforms_from_sentence(conllu, parsed_sentence_from_string):
         "cidade", "."
     ]
 
-    assert (conllu.get_wordforms(parsed_sentence_from_string.tokens) ==
+    assert (conllu.get_wordforms(parsed_sentence_from_string) ==
             wordforms)
 
 
@@ -175,7 +175,7 @@ enfermedad coronaria.
 ])
 def test_get_comments_from_parsed_file(
         conllu, parsed_sentences, idx, expected):
-    assert conllu._get_comments(
+    assert conllu._format_comments(
         parsed_sentences[idx].comments) == expected
 
 
@@ -186,7 +186,7 @@ def test_get_root_from_sentence(conllu, parsed_sentence_from_string):
             ("Gender", "Masc"), ("Number", "Sing")]),
         head=0, deprel="root", deps=None, misc=None)
 
-    assert conllu.get_root(parsed_sentence_from_string.tokens) == root
+    assert conllu.get_root(parsed_sentence_from_string) == root
 
 
 def test_get_sentence_text_from_wordforms(conllu, parsed_sentence_from_string):
@@ -221,7 +221,7 @@ def test_get_head_deps_from_sentence(conllu, parsed_sentence_from_string):
         HeadDep(head="objetivo", dep=".", relation="punct", position=(1, 9))
     ]
 
-    assert (conllu.get_headdep_pairs(parsed_sentence_from_string) ==
+    assert (conllu.get_headdep_triples(parsed_sentence_from_string) ==
             headdeps)
 
 
@@ -233,20 +233,20 @@ def test_get_head_deps_in_deprel(conllu, parsed_sentence_from_string):
         HeadDep(head="hotél", dep="cidade", relation="nmod", position=(5, 8))
     ]
 
-    assert (conllu.get_headdep_pairs_in_deprel(
+    assert (conllu.get_headdep_triples_in_deprel(
         "nmod", parsed_sentence_from_string) == headdeps_nmod)
 
 
 def test_get_heads_from_sentence(conllu, parsed_sentence_from_string, heads):
-    assert conllu.get_heads(parsed_sentence_from_string.tokens) == heads
+    assert conllu.get_heads(parsed_sentence_from_string) == heads
 
 
 def test_get_deps_from_head(conllu, parsed_sentence_from_string, heads):
     head = heads[2].id
-    tokens = parsed_sentence_from_string.tokens
     deps = heads[2].dependents
 
-    assert (conllu.get_deps_from_head(head, tokens) == deps)
+    assert (conllu.get_deps_from_head(
+        head, parsed_sentence_from_string) == deps)
 
 
 @pytest.mark.parametrize("line,expected", [

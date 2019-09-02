@@ -7,6 +7,9 @@ from pyconllu.Token import Head, Token
 
 @pytest.fixture
 def conllu_string():
+    """
+    Return a string with a sentence in CoNLL-U format.
+    """
     return """1	O	o	DET	DET	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	2	det	_	_
 2	objetivo	objetivo	NOUN	NOUN	Gender=Masc|Number=Sing	0	root	_	_
 3-4	dos	_	_	_	_	_	_	_	_
@@ -24,6 +27,9 @@ def conllu_string():
 
 @pytest.fixture
 def conllu_multiple_strings():
+    """
+    Return a string containing multiple sentences in CoNLL-U format.
+    """
     return """# sent_id = train-s1
 # text = O cantor só precisou vê - la nadar para passar a acreditar na nadadora.
 1	O	o	DET	DET	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	2	det	_	_
@@ -81,8 +87,6 @@ def conllu_multiple_strings():
 11	conjunto	conjunto	NOUN	NOUN	Gender=Masc|Number=Sing	6	iobj	_	_
 12	defensivo	defensivo	ADJ	ADJ	Gender=Masc|Number=Sing	11	amod	SpaceAfter=No	_
 13	.	.	PUNCT	.	_	6	punct	_	_
-
-
 """  # noqa
 
 
@@ -149,6 +153,10 @@ enfermedad coronaria.
 
 @pytest.fixture
 def conllu_string_with_empty_node():
+    """
+    Return a string containing a sentence in CoNLL-U format, with an
+    empty node.
+    """
     return """# source_sent_id = . . email-enronsent28_01-0019
 # text = By late 1974 investors were dizzy, they were desperate, they were wrung-out, they had left Wall Street, many for good.
 1	By	by	ADP	IN	_	3	case	_	_
@@ -184,6 +192,9 @@ def conllu_string_with_empty_node():
 
 @pytest.fixture
 def parsed_sentence_from_string():
+    """
+    Return conllu_string parsed.
+    """
     return Sentence(
         comments="",
         tokens=[
@@ -245,6 +256,9 @@ def parsed_sentence_from_string():
 
 @pytest.fixture
 def parsed_sentence_with_empty_node():
+    """
+    Return conllu_string_with_empty_node parsed.
+    """
     return Sentence(
         comments="# source_sent_id = . . email-enronsent28_01-0019\n# text = "
                  "By late 1974 investors were dizzy, they were desperate, "
@@ -668,6 +682,10 @@ def parsed_sentences():
 
 @pytest.fixture
 def heads():
+    """
+    Return the list of heads (instances of Head) in the sentence
+    parsed_sentence_from_string
+    """
     return [
         Head(
             id="9", form="cidade", lemma="cidade", upostag="NOUN",

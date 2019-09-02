@@ -6,6 +6,9 @@ from pyconllu.Token import Head, Token
 
 @pytest.fixture()
 def token():
+    """
+    Return a Token instance with initial values.
+    """
     return Token(
         id="12", form="defensivo", lemma="defensivo", upostag="ADJ",
         xpostag="ADJ", feats=OrderedDict([
