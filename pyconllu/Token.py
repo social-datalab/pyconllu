@@ -44,7 +44,8 @@ class Token(object):
                 self.head == other.head and
                 self.deprel == other.deprel and
                 self.deps == other.deps and
-                self.misc == other.misc
+                self.misc == other.misc and
+                type(self) == type(other)
             )
         return NotImplemented
 
