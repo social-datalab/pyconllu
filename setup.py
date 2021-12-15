@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="pyconllu",
-    version=read("VERSION"),
+    version="0.1.2",
     author="Susana Sotelo",
     author_email="susana.sotelo@linguarum.net",
     description=(
