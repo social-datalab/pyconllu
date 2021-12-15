@@ -2,7 +2,8 @@
 from collections import OrderedDict
 import pytest
 from pyconllu.Sentence import Sentence
-from pyconllu.Token import Head, Token
+from pyconllu.Token import Token
+from pyconllu.Head import Head
 
 
 @pytest.fixture

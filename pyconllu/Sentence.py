@@ -52,9 +52,6 @@ class Sentence(object):
             return NotImplemented
         return not self.__eq__(other)
 
-    def __hash__(self):
-        return hash(tuple(sorted(self.__dict__.items())))
-
     @property
     def tokens(self):
         return self._tokens

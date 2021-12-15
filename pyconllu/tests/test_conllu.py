@@ -18,8 +18,8 @@ def conllu():
 def conllu_filename(tmpdir):
     def _build_conllu_file(contents):
         filename = os.path.join(tmpdir.strpath, 'sample.conllu')
-        with open(filename, "w") as fh:
-            fh.write(contents)
+        with open(filename, "w") as fhi:
+            fhi.write(contents)
 
         return filename
 
@@ -201,7 +201,7 @@ def test_get_sentence_text_from_comments(conllu, parsed_sentences):
                    "valores de homocisteína influyen en la evolución del "\
                    "GIM carotídeo en pacientes con enfermedad coronaria."
 
-    assert (conllu.get_sentence_text(parsed_sentences[0]) == raw_sentence)
+    assert conllu.get_sentence_text(parsed_sentences[0]) == raw_sentence
 
 
 def test_get_head_deps_from_sentence(conllu, parsed_sentence_from_string):

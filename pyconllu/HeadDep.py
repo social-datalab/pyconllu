@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 class HeadDep(object):
+    """A class that represents a pair Head-Dependency."""
     def __init__(
             self, head=None, dep=None, relation=None, position=None):
         self.head = head

@@ -5,7 +5,8 @@ from collections import OrderedDict
 from copy import deepcopy
 from .HeadDep import HeadDep
 from .Sentence import Sentence
-from .Token import Head, Token
+from .Token import Token
+from .Head import Head
 
 DEFAULT_FIELDS = (
     'id', 'form', 'lemma', 'upostag', 'xpostag', 'feats',
@@ -15,13 +16,13 @@ DEPS_PATTERN = r"\d+:[a-z][a-z_-]*(:[a-z][a-z_-]*)?"
 TEXT_PATTERN = r"#\s*text\s*=\s*(.*)$"
 TOKEN_SEP_PATTERN = r"\t"
 MULTI_DEPS_PATTERN = re.compile(
-    r"^{}(\|{})*$".format(DEPS_PATTERN, DEPS_PATTERN))
+    r"^{arg}(\|{arg})*$".format(arg=DEPS_PATTERN))
 PNAME_PATTERN = r"(NP|PROPN|PNOUN|NNP)"
 CONTRACT_ID_PATTERN = r"^[0-9]+\-[0-9]+"
 EMPTY_NODE_ID_PATTERN = r"^[0-9]+\.[0-9]+"
 
 
-class CoNLLU(object):
+class CoNLLU:
     """Process a file or string with text in CoNNL-U format."""
     def __init__(self):
         pass
@@ -129,7 +130,7 @@ class CoNLLU(object):
         Sing\t0\troot\t_\t_\n3-4\tdos\t_\t_\t_\t_\t_\t_\t_\t_\n3\tde\tde\t
         ADP\tADP\t_\t6\tcase\t_\t_\n4\tos\to\tDET\tDET\tDefinite=Def|Gender=
         Masc|Number=Plur|PronType=Art\t6\tdet\t_\t_\n5\tprincipais\tprincipal
-        \tADJ\tADJ\tGender=Masc|Number=Plur\t6\tamod\t_\t_\n6\thotéis\thotél\t
+        \tADJ\tADJ\tGender=Masc|Number=Plur\t6\tamod\t_\t_\n6\thotéis\thotel\t
         NOUN\tNOUN\tGender=Masc|Number=Plur\t2\tnmod\t_\t_\n7-8\tda\t_\t_\t_\t
         _\t_\t_\t_\t_\n7\tde\tde\tADP\tADP\t_\t9\tcase\t_\t_\n8\ta\to\tDET\t
         DET\tDefinite=Def|Gender=Fem|Number=Sing|PronType=Art\t9\tdet\t_\t_\n
@@ -143,11 +144,11 @@ class CoNLLU(object):
         """
         raw_sentence = ""
         try:
-            with open(ifile) as f:
-                for line in f:
+            with open(ifile) as fhi:
+                for line in fhi:
                     line = line.strip(" ")
                     if line == "\n":
-                        if raw_sentence is "":
+                        if raw_sentence == "":
                             continue
                         yield raw_sentence
                         raw_sentence = ""
@@ -178,7 +179,7 @@ class CoNLLU(object):
         Sing\t0\troot\t_\t_\n3-4\tdos\t_\t_\t_\t_\t_\t_\t_\t_\n3\tde\tde\t
         ADP\tADP\t_\t6\tcase\t_\t_\n4\tos\to\tDET\tDET\tDefinite=Def|Gender=
         Masc|Number=Plur|PronType=Art\t6\tdet\t_\t_\n5\tprincipais\tprincipal\t
-        ADJ\tADJ\tGender=Masc|Number=Plur\t6\tamod\t_\t_\n6\thotéis\thotél\t
+        ADJ\tADJ\tGender=Masc|Number=Plur\t6\tamod\t_\t_\n6\thotéis\thotel\t
         NOUN\tNOUN\tGender=Masc|Number=Plur\t2\tnmod\t_\t_\n7-8\tda\t_\t_\t
         _\t_\t_\t_\t_\t_\n7\tde\tde\tADP\tADP\t_\t9\tcase\t_\t_\n8\ta\to\t
         DET\tDET\tDefinite=Def|Gender=Fem|Number=Sing|PronType=Art\t9\tdet\t
@@ -229,7 +230,7 @@ class CoNLLU(object):
         :example:
 
         >>> conllu.get_lemmas(sentence)
-        ['o', 'objetivo', 'de', 'o', 'principal', 'hotél', 'de', 'o',
+        ['o', 'objetivo', 'de', 'o', 'principal', 'hotel', 'de', 'o',
         'cidade', '.']
 
         :param sentence: object with parsed sentence
@@ -285,7 +286,7 @@ class CoNLLU(object):
         """
         try:
             return re.search(TEXT_PATTERN, sentence.comments).group(1)
-        except:
+        except AttributeError:
             pass
 
         return " ".join(self.get_wordforms(sentence))
@@ -402,13 +403,13 @@ class CoNLLU(object):
 
         >>> conllu.get_headdep_triples(sentence)
         [HeadDep(head=objetivo, dep=o, relation=det, position=(1, 0)),
-        HeadDep(head=hotél, dep=de, relation=case, position=(5, 2)),
-        HeadDep(head=hotél, dep=o, relation=det, position=(5, 3)),
-        HeadDep(head=hotél, dep=principal, relation=amod, position=(5, 4)),
-        HeadDep(head=objetivo, dep=hotél, relation=nmod, position=(1, 5)),
+        HeadDep(head=hotel, dep=de, relation=case, position=(5, 2)),
+        HeadDep(head=hotel, dep=o, relation=det, position=(5, 3)),
+        HeadDep(head=hotel, dep=principal, relation=amod, position=(5, 4)),
+        HeadDep(head=objetivo, dep=hotel, relation=nmod, position=(1, 5)),
         HeadDep(head=cidade, dep=de, relation=case, position=(8, 6)),
         HeadDep(head=cidade, dep=o, relation=det, position=(8, 7)),
-        HeadDep(head=hotél, dep=cidade, relation=nmod, position=(5, 8)),
+        HeadDep(head=hotel, dep=cidade, relation=nmod, position=(5, 8)),
         HeadDep(head=objetivo, dep=., relation=punct, position=(1, 9))]
 
         :param sentence: object with parsed sentence
@@ -439,8 +440,8 @@ class CoNLLU(object):
         :example:
 
         >>> conllu.get_headdep_triples_in_deprel("nmod", sentence)
-        [HeadDep(head=objetivo, dep=hotél, relation=nmod, position=(1, 5)),
-        HeadDep(head=hotél, dep=cidade, relation=nmod, position=(5, 8))]
+        [HeadDep(head=objetivo, dep=hotel, relation=nmod, position=(1, 5)),
+        HeadDep(head=hotel, dep=cidade, relation=nmod, position=(5, 8))]
 
         :param deprel: dependency relation
         :type deprel: str
@@ -498,7 +499,7 @@ class CoNLLU(object):
             return True
         return False
 
-    def _is_empty_node(selfself, line):
+    def _is_empty_node(self, line):
         """
         It checks if a string is an empty node ID or not.
         """
@@ -534,8 +535,8 @@ class CoNLLU(object):
                 "by tabs."
                 )
 
-        if(self._is_contraction(line[0])):
-            return(Token(id=line[0], form=line[1]))
+        if self._is_contraction(line[0]):
+            return Token(id=line[0], form=line[1])
 
         data = Token()
 
@@ -566,7 +567,7 @@ class CoNLLU(object):
 
         return data
 
-    def _parse_id_value(selfself, value):
+    def _parse_id_value(self, value):
         if re.match(r"^[0-9]+([\-\.][0-9]+)?$", value):
             return value
 
